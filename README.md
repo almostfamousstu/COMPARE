@@ -4,6 +4,8 @@ A sleek, dark-mode-first Next.js 14 application that compares your SKU specifica
 
 ## Getting Started
 
+> **Node version:** Next.js 14 requires Node.js **18.17.0 or newer**. If you use `nvm`, run `nvm use` (or install) with the provided `.nvmrc` file before installing dependencies.
+
 1. Install dependencies:
 
 ```bash
