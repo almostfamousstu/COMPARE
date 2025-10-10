@@ -28,6 +28,22 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the app.
 
+## Run with Docker
+
+1. Build the production image:
+
+   ```bash
+   docker build -t sku-comparator .
+   ```
+
+2. Start the container (mount your environment file for the Gemini key):
+
+   ```bash
+   docker run --rm -p 3000:3000 --env-file .env.local sku-comparator
+   ```
+
+   The application will be available at [http://localhost:3000](http://localhost:3000).
+
 ## Tech Stack
 
 - Next.js 14 (App Router) with TypeScript
