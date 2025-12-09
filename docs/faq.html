@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Frequently Asked Questions</h1>
+        
+        <div class="intro">
+            <p>Common questions and answers about the SKU Specification Comparator application.</p>
+        </div>
+
+        <h2>General Questions</h2>
+
+        <h3>What is the SKU Specification Comparator?</h3>
+        <p>The SKU Specification Comparator is a web application that helps you validate product specifications by comparing your data against AI-generated specifications from Google Gemini. It highlights discrepancies to help ensure data accuracy.</p>
+
+        <h3>Who should use this application?</h3>
+        <p>This tool is useful for:</p>
+        <ul>
+            <li>Quality assurance teams validating product catalogs</li>
+            <li>E-commerce managers maintaining accurate product information</li>
+            <li>Data analysts checking specification consistency</li>
+            <li>Product managers verifying attribute accuracy</li>
+            <li>Anyone responsible for product data quality</li>
+        </ul>
+
+        <h3>Is this application free to use?</h3>
+        <p>The application itself is free and open-source. However, you need a Google Gemini API key, which may have associated costs based on your usage. Google typically offers free tier access for development and testing.</p>
+
+        <h3>Do I need to install anything?</h3>
+        <p>Yes, you need:</p>
+        <ul>
+            <li>Node.js 18.17.0 or newer</li>
+            <li>A Google Gemini API key</li>
+            <li>The application source code</li>
+        </ul>
+        <p>Alternatively, you can run it with Docker if you prefer containerized deployment.</p>
+
+        <h2>Setup & Configuration</h2>
+
+        <h3>How do I get a Google Gemini API key?</h3>
+        <ol>
+            <li>Visit <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+            <li>Sign in with your Google account</li>
+            <li>Click "Get API Key" or "Create API Key"</li>
+            <li>Copy the generated key</li>
+            <li>Add it to your <code>.env.local</code> file</li>
+        </ol>
+
+        <h3>Is my API key secure?</h3>
+        <p>Yes. The API key is stored server-side only and never exposed to the browser. The <code>.env.local</code> file is included in <code>.gitignore</code> to prevent accidental commits to version control.</p>
+
+        <h3>Can I use this without an API key?</h3>
+        <p>No. The application requires a valid Google Gemini API key to function. The comparison feature relies on AI-generated specifications from Gemini.</p>
+
+        <h3>Which port does the application use?</h3>
+        <p>By default, the application runs on port 3000. You can change this by setting the <code>PORT</code> environment variable or using the <code>-p</code> flag with the Next.js dev command.</p>
+
+        <h2>Usage Questions</h2>
+
+        <h3>What format should my specifications be in?</h3>
+        <p>The application accepts two formats:</p>
+        <ul>
+            <li><strong>JSON:</strong> <code>{"Color": "Red", "Material": "Steel"}</code></li>
+            <li><strong>Colon-separated:</strong> <code>Color: Red</code> (one per line)</li>
+        </ul>
+        <p>The parser automatically detects which format you're using.</p>
+
+        <h3>How many attributes can I compare at once?</h3>
+        <p>There's no hard limit, but we recommend 5-20 attributes for best performance. Too many attributes can slow down the AI response and make results harder to review.</p>
+
+        <h3>What does "Show only differences" do?</h3>
+        <p>This toggle filters the comparison table to show only attributes where your value differs from the AI-generated value. It helps you focus on potential issues without scrolling through matching attributes.</p>
+
+        <h3>Why do some values show as mismatches when they seem the same?</h3>
+        <p>The comparison is exact after normalization (lowercase, trimmed whitespace). Differences that cause mismatches include:</p>
+        <ul>
+            <li>Spelling variations: "Aluminum" vs "Aluminium"</li>
+            <li>Unit differences: "10 lbs" vs "10 pounds"</li>
+            <li>Spacing: "256GB" vs "256 GB"</li>
+            <li>Specificity: "Blue" vs "Navy Blue"</li>
+        </ul>
+
+        <h3>Are case differences ignored?</h3>
+        <p>Yes. The comparison is case-insensitive. "RED", "Red", and "red" are all considered matches.</p>
+
+        <h2>Privacy & Security</h2>
+
+        <h3>Is my data sent to Google?</h3>
+        <p>Only partially. When you run a comparison:</p>
+        <ul>
+            <li><strong>Sent to Google:</strong> The SKU and attribute keys (names only)</li>
+            <li><strong>NOT sent:</strong> Your attribute values</li>
+        </ul>
+        <p>This design protects your proprietary specification data while still enabling AI comparison.</p>
+
+        <h3>Is my data stored anywhere?</h3>
+        <p>No. The application doesn't use a database and doesn't store or log any comparison data. Each comparison is processed in real-time and not persisted.</p>
+
+        <h3>Can others see my comparisons?</h3>
+        <p>No. All comparisons happen client-side after receiving AI responses. There's no sharing or multi-user functionality.</p>
+
+        <h3>Is this GDPR compliant?</h3>
+        <p>The application itself doesn't collect or store personal data. However, if you're processing product data that contains personal information, you're responsible for ensuring compliance with relevant regulations.</p>
+
+        <h2>Technical Questions</h2>
+
+        <h3>What AI model does this use?</h3>
+        <p>The application uses Google's Gemini 2.5 Flash model, optimized for speed and accuracy.</p>
+
+        <h3>How long does a comparison take?</h3>
+        <p>Typically 2-5 seconds, depending on:</p>
+        <ul>
+            <li>Number of attributes</li>
+            <li>Network latency</li>
+            <li>Gemini API load</li>
+            <li>Complexity of the SKU</li>
+        </ul>
+
+        <h3>Can I run this offline?</h3>
+        <p>No. The application requires internet connectivity to access the Google Gemini API.</p>
+
+        <h3>Does this work on mobile devices?</h3>
+        <p>Yes. The application is fully responsive and works on smartphones and tablets. The interface adapts to smaller screens with horizontal scrolling for the comparison table.</p>
+
+        <h3>What browsers are supported?</h3>
+        <p>The application works on all modern browsers:</p>
+        <ul>
+            <li>Chrome (recommended)</li>
+            <li>Firefox</li>
+            <li>Safari</li>
+            <li>Edge</li>
+        </ul>
+        <p>Internet Explorer is not supported.</p>
+
+        <h3>Can I customize the UI theme?</h3>
+        <p>The application is designed for dark mode only. You can modify the Tailwind configuration in <code>tailwind.config.ts</code> if you need to change colors, but there's no built-in light mode.</p>
+
+        <h2>Deployment Questions</h2>
+
+        <h3>Can I deploy this to production?</h3>
+        <p>Yes. The application can be deployed to any platform that supports Node.js or Docker, including:</p>
+        <ul>
+            <li>Vercel (recommended for Next.js)</li>
+            <li>Netlify</li>
+            <li>AWS (ECS, Lambda, Amplify)</li>
+            <li>Google Cloud (Cloud Run, App Engine)</li>
+            <li>Azure (App Service)</li>
+            <li>Self-hosted with Docker</li>
+        </ul>
+
+        <h3>How do I deploy with Docker?</h3>
+        <p>See the <a href="docker.html">Docker Deployment Guide</a> for complete instructions. Quick start:</p>
+        <div class="code-block">
+            <pre><code>docker build -t sku-comparator .
+docker run -p 3000:3000 --env-file .env.local sku-comparator</code></pre>
+        </div>
+
+        <h3>Does this scale horizontally?</h3>
+        <p>Yes. The application is stateless and can run multiple instances behind a load balancer. Each instance only needs the <code>GEMINI_API_KEY</code> environment variable.</p>
+
+        <h3>What are the system requirements?</h3>
+        <p>Minimal requirements:</p>
+        <ul>
+            <li><strong>CPU:</strong> 1 core</li>
+            <li><strong>Memory:</strong> 512MB minimum, 1GB recommended</li>
+            <li><strong>Disk:</strong> ~200MB for application and dependencies</li>
+            <li><strong>Network:</strong> Internet connectivity required</li>
+        </ul>
+
+        <h2>Troubleshooting</h2>
+
+        <h3>Why am I getting "GEMINI_API_KEY is not configured"?</h3>
+        <p>This means the environment variable isn't being read. Check:</p>
+        <ul>
+            <li><code>.env.local</code> file exists</li>
+            <li>File is in project root directory</li>
+            <li>API key has no typos or extra spaces</li>
+            <li>Server was restarted after adding the file</li>
+        </ul>
+
+        <h3>Comparisons are failing with "Failed to generate comparison"</h3>
+        <p>Common causes:</p>
+        <ul>
+            <li>Invalid API key</li>
+            <li>Network connectivity issues</li>
+            <li>Gemini API quota exceeded</li>
+            <li>Gemini service temporarily unavailable</li>
+        </ul>
+        <p>Check the <a href="troubleshooting.html">Troubleshooting Guide</a> for detailed solutions.</p>
+
+        <h3>Input parsing keeps failing</h3>
+        <p>Ensure your input matches one of the supported formats:</p>
+        <ul>
+            <li>Valid JSON with double quotes</li>
+            <li>Or colon-separated lines with at least one colon per line</li>
+        </ul>
+        <p>See <a href="input-formats.html">Input Formats</a> for examples.</p>
+
+        <h3>The application won't start</h3>
+        <p>Check:</p>
+        <ul>
+            <li>Node.js version (18.17.0+)</li>
+            <li>Port 3000 isn't already in use</li>
+            <li>Dependencies are installed (<code>npm install</code>)</li>
+            <li>.env.local file exists with valid API key</li>
+        </ul>
+
+        <h2>Features & Limitations</h2>
+
+        <h3>Can I compare multiple SKUs at once?</h3>
+        <p>No. Currently, the application supports one SKU comparison at a time. You need to run separate comparisons for each SKU.</p>
+
+        <h3>Can I save comparison results?</h3>
+        <p>No. The application doesn't include save/export functionality. Results are displayed only during the session and not persisted.</p>
+
+        <h3>Can I customize the AI's behavior?</h3>
+        <p>The AI model and system prompt are configured in <code>app/api/compare/route.ts</code>. You can modify the <code>SYSTEM_PROMPT</code> constant if you need different behavior, but this requires code changes.</p>
+
+        <h3>Does it support languages other than English?</h3>
+        <p>The UI is in English only. However, Gemini supports multiple languages for SKUs and specifications. The comparison will work with non-English attribute names and values.</p>
+
+        <h3>Can I use a different AI model?</h3>
+        <p>The application is designed for Google Gemini. Using a different model would require code changes in <code>app/api/compare/route.ts</code> to integrate with a different API.</p>
+
+        <h3>Are there rate limits?</h3>
+        <p>The application doesn't impose rate limits, but you're subject to Google Gemini's API rate limits based on your API key's quota. Monitor usage in Google AI Studio.</p>
+
+        <h2>Best Practices</h2>
+
+        <h3>How can I get the most accurate comparisons?</h3>
+        <ul>
+            <li>Use specific, detailed SKUs</li>
+            <li>Include brand names when relevant</li>
+            <li>Use standard industry terminology</li>
+            <li>Be consistent with units and formatting</li>
+            <li>Focus on key differentiating attributes</li>
+        </ul>
+
+        <h3>When should I trust the AI vs my data?</h3>
+        <p>Trust AI when:</p>
+        <ul>
+            <li>SKU is well-known and widely available</li>
+            <li>Attributes use standard terminology</li>
+            <li>Product has been on market for a while</li>
+        </ul>
+        <p>Trust your data when:</p>
+        <ul>
+            <li>Product is custom or specialized</li>
+            <li>You have official manufacturer specifications</li>
+            <li>Using industry-specific terminology</li>
+            <li>Product is very new or unreleased</li>
+        </ul>
+
+        <h3>How often should I run comparisons?</h3>
+        <p>Run comparisons:</p>
+        <ul>
+            <li>When adding new products to your catalog</li>
+            <li>After bulk imports or data migrations</li>
+            <li>Periodically for quality assurance</li>
+            <li>When specifications seem inconsistent</li>
+            <li>Before publishing changes to production</li>
+        </ul>
+
+        <div class="callout">
+            <h3>📚 Still Have Questions?</h3>
+            <p>If your question isn't answered here:</p>
+            <ul>
+                <li>Check the <a href="troubleshooting.html">Troubleshooting Guide</a></li>
+                <li>Review the <a href="home.html">complete documentation</a></li>
+                <li>Look through specific topic guides in the sidebar</li>
+            </ul>
+        </div>
+
+        <div class="next-steps">
+            <h2>Explore Documentation</h2>
+            <div class="button-group">
+                <a href="home.html" class="button-primary">Documentation Home</a>
+                <a href="quick-start.html" class="button-secondary">Quick Start Guide</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>
