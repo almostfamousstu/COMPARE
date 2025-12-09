@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Formats - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Input Formats</h1>
+        
+        <div class="intro">
+            <p>Learn about the different ways to provide specification data to the SKU Comparator, including detailed formatting rules and examples.</p>
+        </div>
+
+        <h2>Supported Formats</h2>
+        <p>The application accepts specification data in two formats. The parser automatically detects which format you're using, so you don't need to specify it.</p>
+
+        <h2>Format 1: JSON (Recommended)</h2>
+
+        <h3>Basic JSON Format</h3>
+        <p>Provide your specifications as a JSON object with string keys and string values:</p>
+        
+        <div class="code-block">
+            <div class="code-block-header">Example</div>
+            <pre><code>{
+  "Color": "Red",
+  "Material": "Steel",
+  "Weight": "10 lbs"
+}</code></pre>
+        </div>
+
+        <h3>JSON Format Rules</h3>
+        <ul>
+            <li>Must be a valid JSON object (not an array)</li>
+            <li>Keys must be strings</li>
+            <li>Values can be strings or will be converted to strings</li>
+            <li>Supports proper JSON escaping for special characters</li>
+            <li>Case-sensitive for keys (though comparison is case-insensitive)</li>
+        </ul>
+
+        <h3>JSON Examples</h3>
+
+        <h4>Simple Specifications</h4>
+        <div class="code-block">
+            <pre><code>{
+  "Size": "Large",
+  "Color": "Blue",
+  "Brand": "Acme Corp"
+}</code></pre>
+        </div>
+
+        <h4>Specifications with Numbers</h4>
+        <p>Numbers are automatically converted to strings:</p>
+        <div class="code-block">
+            <pre><code>{
+  "Width": 24,
+  "Height": 36,
+  "Weight": 15.5,
+  "Count": 100
+}</code></pre>
+        </div>
+
+        <h4>Specifications with Special Characters</h4>
+        <div class="code-block">
+            <pre><code>{
+  "Description": "High-quality \"premium\" material",
+  "Size": "10' x 12'",
+  "Features": "Multi-line\nwith breaks"
+}</code></pre>
+        </div>
+
+        <h4>Specifications with Colons in Values</h4>
+        <p>JSON handles colons in values without issues:</p>
+        <div class="code-block">
+            <pre><code>{
+  "Ratio": "16:9",
+  "Time": "12:30 PM",
+  "URL": "https://example.com"
+}</code></pre>
+        </div>
+
+        <h3>JSON Benefits</h3>
+        <ul>
+            <li><strong>Unambiguous:</strong> No parsing edge cases</li>
+            <li><strong>Standard format:</strong> Can copy directly from databases or APIs</li>
+            <li><strong>Special characters:</strong> Proper escaping for complex values</li>
+            <li><strong>Tool support:</strong> Easy to validate with JSON linters</li>
+        </ul>
+
+        <h2>Format 2: Colon-Separated Lines</h2>
+
+        <h3>Basic Colon-Separated Format</h3>
+        <p>Provide specifications as simple lines with colons separating keys and values:</p>
+        
+        <div class="code-block">
+            <div class="code-block-header">Example</div>
+            <pre><code>Color: Red
+Material: Steel
+Weight: 10 lbs</code></pre>
+        </div>
+
+        <h3>Colon-Separated Rules</h3>
+        <ul>
+            <li>Each line represents one key-value pair</li>
+            <li>Key and value separated by first colon</li>
+            <li>Additional colons in value are preserved</li>
+            <li>Empty lines are ignored</li>
+            <li>Leading and trailing whitespace trimmed</li>
+            <li>At least one colon required per line</li>
+        </ul>
+
+        <h3>Colon-Separated Examples</h3>
+
+        <h4>Simple Format</h4>
+        <div class="code-block">
+            <pre><code>Brand: Apple
+Model: iPhone 15
+Storage: 256GB
+Color: Blue Titanium</code></pre>
+        </div>
+
+        <h4>With Extra Whitespace</h4>
+        <p>Whitespace is automatically trimmed:</p>
+        <div class="code-block">
+            <pre><code>   Color   :   Red   
+Material:Steel
+  Weight  : 10 lbs</code></pre>
+        </div>
+
+        <h4>With Empty Lines</h4>
+        <p>Empty lines are safely ignored:</p>
+        <div class="code-block">
+            <pre><code>Color: Red
+
+Material: Steel
+
+Weight: 10 lbs</code></pre>
+        </div>
+
+        <h4>With Colons in Values</h4>
+        <p>Everything after the first colon is the value:</p>
+        <div class="code-block">
+            <pre><code>Aspect Ratio: 16:9
+Meeting Time: 10:30 AM
+Website: https://example.com:8080</code></pre>
+        </div>
+
+        <h3>Colon-Separated Benefits</h3>
+        <ul>
+            <li><strong>Quick to type:</strong> No JSON syntax required</li>
+            <li><strong>Human-readable:</strong> Natural format for specifications</li>
+            <li><strong>Easy to edit:</strong> Simple to add or remove lines</li>
+            <li><strong>Forgiving:</strong> Handles extra whitespace gracefully</li>
+        </ul>
+
+        <h2>Format Detection</h2>
+
+        <h3>How Detection Works</h3>
+        <p>The parser attempts to parse your input in this order:</p>
+        <ol class="workflow-steps">
+            <li>
+                <strong>Try JSON First</strong>
+                <p>Attempts to parse input as JSON using JSON.parse()</p>
+            </li>
+            <li>
+                <strong>Validate JSON Structure</strong>
+                <p>If JSON parsing succeeds, verifies it's an object (not array or primitive)</p>
+            </li>
+            <li>
+                <strong>Fallback to Colon-Separated</strong>
+                <p>If JSON parsing fails, tries line-by-line colon-separated parsing</p>
+            </li>
+            <li>
+                <strong>Report Errors</strong>
+                <p>If both fail, returns error message indicating the problem</p>
+            </li>
+        </ol>
+
+        <h3>Ambiguous Cases</h3>
+        <p>In some rare cases, input could be valid in both formats. JSON takes precedence:</p>
+        
+        <div class="code-block">
+            <div class="code-block-header">This will be parsed as JSON</div>
+            <pre><code>{"Color": "Red"}</code></pre>
+        </div>
+
+        <h2>Common Parsing Errors</h2>
+
+        <h3>JSON Errors</h3>
+
+        <h4>Missing Quotes</h4>
+        <div class="code-block">
+            <div class="code-block-header">❌ Invalid</div>
+            <pre><code>{
+  Color: Red
+}</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-block-header">✅ Valid</div>
+            <pre><code>{
+  "Color": "Red"
+}</code></pre>
+        </div>
+
+        <h4>Trailing Commas</h4>
+        <div class="code-block">
+            <div class="code-block-header">❌ Invalid</div>
+            <pre><code>{
+  "Color": "Red",
+  "Material": "Steel",
+}</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-block-header">✅ Valid</div>
+            <pre><code>{
+  "Color": "Red",
+  "Material": "Steel"
+}</code></pre>
+        </div>
+
+        <h4>Single Quotes</h4>
+        <div class="code-block">
+            <div class="code-block-header">❌ Invalid</div>
+            <pre><code>{
+  'Color': 'Red'
+}</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-block-header">✅ Valid</div>
+            <pre><code>{
+  "Color": "Red"
+}</code></pre>
+        </div>
+
+        <h3>Colon-Separated Errors</h3>
+
+        <h4>Missing Colon</h4>
+        <div class="code-block">
+            <div class="code-block-header">❌ Invalid</div>
+            <pre><code>Color Red
+Material Steel</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-block-header">✅ Valid</div>
+            <pre><code>Color: Red
+Material: Steel</code></pre>
+        </div>
+
+        <h4>Empty Value</h4>
+        <div class="code-block">
+            <div class="code-block-header">❌ Invalid</div>
+            <pre><code>Color:
+Material: Steel</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-block-header">✅ Valid</div>
+            <pre><code>Color: Not specified
+Material: Steel</code></pre>
+        </div>
+
+        <h2>Best Practices</h2>
+
+        <h3>Choose JSON When</h3>
+        <ul>
+            <li>Copying data from databases or APIs</li>
+            <li>Values contain colons (for clarity)</li>
+            <li>Working with complex values or special characters</li>
+            <li>Need to validate format with external tools</li>
+            <li>Sharing specifications programmatically</li>
+        </ul>
+
+        <h3>Choose Colon-Separated When</h3>
+        <ul>
+            <li>Typing specifications manually</li>
+            <li>Quick testing or validation</li>
+            <li>Values are simple strings without special characters</li>
+            <li>Prefer human-readable format</li>
+            <li>Working with simple line-based data</li>
+        </ul>
+
+        <h3>General Tips</h3>
+        <ul>
+            <li><strong>Be consistent:</strong> Use the same format throughout your workflow</li>
+            <li><strong>Test first:</strong> Try a small example before pasting large datasets</li>
+            <li><strong>Check whitespace:</strong> Extra spaces can cause unexpected results in colon format</li>
+            <li><strong>Validate JSON:</strong> Use a JSON validator if unsure about syntax</li>
+            <li><strong>Use meaningful keys:</strong> Attribute names should be clear and specific</li>
+        </ul>
+
+        <h2>Value Type Handling</h2>
+
+        <h3>Automatic String Conversion</h3>
+        <p>All values are converted to strings for comparison. Here's how different types are handled:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Input Type</th>
+                    <th>Conversion</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>String</td>
+                    <td>Used as-is</td>
+                    <td>"Red" → "Red"</td>
+                </tr>
+                <tr>
+                    <td>Number</td>
+                    <td>String representation</td>
+                    <td>42 → "42"</td>
+                </tr>
+                <tr>
+                    <td>Boolean</td>
+                    <td>String representation</td>
+                    <td>true → "true"</td>
+                </tr>
+                <tr>
+                    <td>Object/Array</td>
+                    <td>JSON stringified</td>
+                    <td>{a: 1} → '{"a":1}'</td>
+                </tr>
+                <tr>
+                    <td>null</td>
+                    <td>String "null"</td>
+                    <td>null → "null"</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Special Value Considerations</h3>
+        <ul>
+            <li><strong>Empty strings:</strong> Valid but may cause display issues</li>
+            <li><strong>Very long values:</strong> Table cells expand to fit content</li>
+            <li><strong>Line breaks:</strong> Preserved in JSON format only</li>
+            <li><strong>Unicode:</strong> Fully supported in both formats</li>
+        </ul>
+
+        <div class="callout">
+            <h3>💡 Pro Tip</h3>
+            <p>Use JSON format when programmatically generating input, and colon-separated format for quick manual tests. The application handles both seamlessly!</p>
+        </div>
+
+        <div class="next-steps">
+            <h2>Continue Learning</h2>
+            <div class="button-group">
+                <a href="comparison.html" class="button-primary">Understanding Comparisons</a>
+                <a href="usage.html" class="button-secondary">Application Usage</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

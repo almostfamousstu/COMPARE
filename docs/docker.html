@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Deployment - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Docker Deployment</h1>
+        
+        <div class="intro">
+            <p>Learn how to build and deploy the SKU Comparator using Docker for consistent, portable deployments across different environments.</p>
+        </div>
+
+        <h2>Prerequisites</h2>
+        <ul>
+            <li><strong>Docker:</strong> Version 20.10 or newer</li>
+            <li><strong>Docker Compose (optional):</strong> For orchestration</li>
+            <li><strong>Gemini API Key:</strong> Required for the application to function</li>
+        </ul>
+
+        <h2>Dockerfile Overview</h2>
+        <p>The application includes a multi-stage Dockerfile optimized for production deployments:</p>
+
+        <h3>Build Stages</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Purpose</th>
+                    <th>Base Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>base</code></td>
+                    <td>Common foundation</td>
+                    <td>node:20-bullseye-slim</td>
+                </tr>
+                <tr>
+                    <td><code>deps</code></td>
+                    <td>Install dependencies</td>
+                    <td>base</td>
+                </tr>
+                <tr>
+                    <td><code>builder</code></td>
+                    <td>Build application</td>
+                    <td>base</td>
+                </tr>
+                <tr>
+                    <td><code>runner</code></td>
+                    <td>Final production image</td>
+                    <td>base</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Building the Docker Image</h2>
+
+        <h3>Basic Build</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>docker build -t sku-comparator .</code></pre>
+        </div>
+
+        <p>This command:</p>
+        <ul>
+            <li>Uses the Dockerfile in the current directory</li>
+            <li>Tags the image as "sku-comparator"</li>
+            <li>Builds all stages sequentially</li>
+            <li>Optimizes layers for caching</li>
+        </ul>
+
+        <h3>Build with Custom Tag</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>docker build -t myregistry/sku-comparator:v1.0.0 .</code></pre>
+        </div>
+
+        <h3>Build Progress</h3>
+        <p>You'll see output like:</p>
+        <div class="code-block">
+            <pre><code>[+] Building 125.3s (18/18) FINISHED
+ => [internal] load build definition
+ => [internal] load .dockerignore
+ => [base 1/1] FROM node:20-bullseye-slim
+ => [deps 1/2] COPY package*.json ./
+ => [deps 2/2] RUN npm install --legacy-peer-deps
+ => [builder 1/3] COPY --from=deps /app/node_modules
+ => [builder 2/3] COPY . .
+ => [builder 3/3] RUN npm run build
+ => [runner] creating user and group
+ => [runner] copying artifacts
+ => exporting to image
+ => => naming to docker.io/library/sku-comparator</code></pre>
+        </div>
+
+        <h2>Running the Container</h2>
+
+        <h3>Basic Run</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>docker run --rm -p 3000:3000 \
+  --env-file .env.local \
+  sku-comparator</code></pre>
+        </div>
+
+        <p>Explanation:</p>
+        <ul>
+            <li><code>--rm</code>: Remove container after it stops</li>
+            <li><code>-p 3000:3000</code>: Map port 3000 from container to host</li>
+            <li><code>--env-file .env.local</code>: Load environment variables from file</li>
+        </ul>
+
+        <h3>Run with Direct Environment Variables</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>docker run --rm -p 3000:3000 \
+  -e GEMINI_API_KEY="your-api-key" \
+  sku-comparator</code></pre>
+        </div>
+
+        <h3>Run in Background (Detached)</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>docker run -d -p 3000:3000 \
+  --name sku-comparator \
+  --env-file .env.local \
+  sku-comparator</code></pre>
+        </div>
+
+        <p>Additional flags:</p>
+        <ul>
+            <li><code>-d</code>: Run in detached mode (background)</li>
+            <li><code>--name</code>: Give container a specific name</li>
+        </ul>
+
+        <h3>View Container Logs</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code># View logs
+docker logs sku-comparator
+
+# Follow logs in real-time
+docker logs -f sku-comparator
+
+# View last 100 lines
+docker logs --tail 100 sku-comparator</code></pre>
+        </div>
+
+        <h3>Stop Container</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>docker stop sku-comparator</code></pre>
+        </div>
+
+        <h2>Docker Compose</h2>
+
+        <h3>docker-compose.yml Example</h3>
+        <div class="code-block">
+            <div class="code-block-header">docker-compose.yml</div>
+            <pre><code>version: '3.8'
+
+services:
+  sku-comparator:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s</code></pre>
+        </div>
+
+        <h3>Using Docker Compose</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code># Build and start
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+
+# Rebuild
+docker-compose up -d --build</code></pre>
+        </div>
+
+        <h2>Environment Variables in Docker</h2>
+
+        <h3>Method 1: Environment File</h3>
+        <p>Create a <code>.env.local</code> file:</p>
+        <div class="code-block">
+            <div class="code-block-header">.env.local</div>
+            <pre><code>GEMINI_API_KEY=your-api-key-here
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1</code></pre>
+        </div>
+
+        <p>Use with docker run:</p>
+        <div class="code-block">
+            <pre><code>docker run --env-file .env.local sku-comparator</code></pre>
+        </div>
+
+        <h3>Method 2: Direct Variables</h3>
+        <div class="code-block">
+            <pre><code>docker run \
+  -e GEMINI_API_KEY="your-key" \
+  -e NODE_ENV=production \
+  sku-comparator</code></pre>
+        </div>
+
+        <h3>Method 3: Docker Secrets (Swarm)</h3>
+        <div class="code-block">
+            <pre><code># Create secret
+echo "your-api-key" | docker secret create gemini_key -
+
+# Use in stack
+services:
+  sku-comparator:
+    secrets:
+      - gemini_key
+secrets:
+  gemini_key:
+    external: true</code></pre>
+        </div>
+
+        <h2>Production Deployment</h2>
+
+        <h3>Best Practices</h3>
+        <ul>
+            <li>Use a specific version tag instead of <code>latest</code></li>
+            <li>Run as non-root user (already configured in Dockerfile)</li>
+            <li>Set resource limits to prevent overconsumption</li>
+            <li>Enable health checks for monitoring</li>
+            <li>Use secrets management for API keys</li>
+            <li>Enable logging drivers for centralized logs</li>
+        </ul>
+
+        <h3>Resource Limits</h3>
+        <div class="code-block">
+            <pre><code>docker run \
+  --memory="512m" \
+  --cpus="1.0" \
+  -p 3000:3000 \
+  --env-file .env.local \
+  sku-comparator</code></pre>
+        </div>
+
+        <h3>Health Checks</h3>
+        <div class="code-block">
+            <pre><code>docker run \
+  --health-cmd="curl -f http://localhost:3000 || exit 1" \
+  --health-interval=30s \
+  --health-timeout=10s \
+  --health-retries=3 \
+  -p 3000:3000 \
+  --env-file .env.local \
+  sku-comparator</code></pre>
+        </div>
+
+        <h3>Restart Policies</h3>
+        <div class="code-block">
+            <pre><code># Always restart unless manually stopped
+docker run --restart unless-stopped sku-comparator
+
+# Restart on failure only
+docker run --restart on-failure:3 sku-comparator
+
+# Always restart
+docker run --restart always sku-comparator</code></pre>
+        </div>
+
+        <h2>Container Registry</h2>
+
+        <h3>Push to Docker Hub</h3>
+        <div class="code-block">
+            <pre><code># Tag image
+docker tag sku-comparator username/sku-comparator:v1.0.0
+
+# Login
+docker login
+
+# Push
+docker push username/sku-comparator:v1.0.0</code></pre>
+        </div>
+
+        <h3>Pull and Run from Registry</h3>
+        <div class="code-block">
+            <pre><code># Pull image
+docker pull username/sku-comparator:v1.0.0
+
+# Run
+docker run -p 3000:3000 \
+  --env-file .env.local \
+  username/sku-comparator:v1.0.0</code></pre>
+        </div>
+
+        <h2>Networking</h2>
+
+        <h3>Custom Network</h3>
+        <div class="code-block">
+            <pre><code># Create network
+docker network create sku-network
+
+# Run container on network
+docker run -d \
+  --network sku-network \
+  --name sku-comparator \
+  -p 3000:3000 \
+  --env-file .env.local \
+  sku-comparator</code></pre>
+        </div>
+
+        <h3>Custom Port Mapping</h3>
+        <div class="code-block">
+            <pre><code># Map to port 8080 on host
+docker run -p 8080:3000 sku-comparator
+
+# Map to specific interface
+docker run -p 127.0.0.1:3000:3000 sku-comparator</code></pre>
+        </div>
+
+        <h2>Volume Mounts</h2>
+
+        <h3>Development with Volume</h3>
+        <p>For development with live code updates:</p>
+        <div class="code-block">
+            <pre><code>docker run -p 3000:3000 \
+  -v $(pwd):/app \
+  -v /app/node_modules \
+  --env-file .env.local \
+  sku-comparator npm run dev</code></pre>
+        </div>
+
+        <div class="warning">
+            <strong>Note:</strong> The production Dockerfile doesn't include development dependencies. For development with Docker, consider a separate dev Dockerfile.
+        </div>
+
+        <h2>Troubleshooting Docker Deployment</h2>
+
+        <h3>Build Failures</h3>
+        <p>If the build fails:</p>
+        <ul>
+            <li>Check Docker version: <code>docker --version</code></li>
+            <li>Ensure .dockerignore is present</li>
+            <li>Verify internet connection for npm install</li>
+            <li>Try with <code>--no-cache</code>: <code>docker build --no-cache -t sku-comparator .</code></li>
+        </ul>
+
+        <h3>Container Exits Immediately</h3>
+        <div class="code-block">
+            <pre><code># Check logs
+docker logs sku-comparator
+
+# Run interactively for debugging
+docker run -it --entrypoint /bin/sh sku-comparator</code></pre>
+        </div>
+
+        <h3>Cannot Access Application</h3>
+        <ul>
+            <li>Verify port mapping: <code>docker ps</code></li>
+            <li>Check firewall settings</li>
+            <li>Test from within container: <code>docker exec sku-comparator curl localhost:3000</code></li>
+            <li>Verify container is running: <code>docker ps</code></li>
+        </ul>
+
+        <h3>API Key Not Working</h3>
+        <div class="code-block">
+            <pre><code># Check environment variables in container
+docker exec sku-comparator env | grep GEMINI
+
+# Verify .env.local exists and has correct format</code></pre>
+        </div>
+
+        <h2>Performance Optimization</h2>
+
+        <h3>Build Cache</h3>
+        <ul>
+            <li>Dependencies installed in separate layer for better caching</li>
+            <li>COPY package files before source code</li>
+            <li>Multi-stage build keeps final image small</li>
+        </ul>
+
+        <h3>Image Size</h3>
+        <div class="code-block">
+            <pre><code># Check image size
+docker images sku-comparator
+
+# Analyze layers
+docker history sku-comparator</code></pre>
+        </div>
+
+        <h3>Reducing Image Size</h3>
+        <ul>
+            <li>Already uses slim base image</li>
+            <li>Multi-stage build excludes dev dependencies</li>
+            <li>Only production files copied to final stage</li>
+        </ul>
+
+        <div class="callout">
+            <h3>🚀 Quick Start</h3>
+            <pre><code># Build
+docker build -t sku-comparator .
+
+# Run
+docker run --rm -p 3000:3000 \
+  -e GEMINI_API_KEY="your-key" \
+  sku-comparator
+
+# Access
+http://localhost:3000</code></pre>
+        </div>
+
+        <div class="next-steps">
+            <h2>Related Topics</h2>
+            <div class="button-group">
+                <a href="cli-options.html" class="button-primary">CLI & Scripts</a>
+                <a href="environment.html" class="button-secondary">Environment Config</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

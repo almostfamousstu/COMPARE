@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Troubleshooting</h1>
+        
+        <div class="intro">
+            <p>Solutions to common problems and issues you might encounter while using or deploying the SKU Specification Comparator.</p>
+        </div>
+
+        <h2>Installation Issues</h2>
+
+        <h3>Node.js Version Mismatch</h3>
+        <p><strong>Symptom:</strong> Error about Node.js version during installation or startup</p>
+        
+        <p><strong>Error Message:</strong></p>
+        <div class="code-block">
+            <pre><code>error: The engine "node" is incompatible with this module</code></pre>
+        </div>
+
+        <p><strong>Solution:</strong></p>
+        <ol>
+            <li>Check your Node.js version: <code>node --version</code></li>
+            <li>Ensure you have Node.js 18.17.0 or newer</li>
+            <li>Install latest LTS from <a href="https://nodejs.org/" target="_blank">nodejs.org</a></li>
+            <li>If using nvm: <code>nvm install 18 && nvm use 18</code></li>
+        </ol>
+
+        <h3>npm Install Failures</h3>
+        <p><strong>Symptom:</strong> Dependencies fail to install</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <div class="code-block">
+            <div class="code-block-header">Clear cache and retry</div>
+            <pre><code>npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">Check npm version</div>
+            <pre><code>npm --version
+# Should be 8.x or newer</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">Try with legacy peer deps</div>
+            <pre><code>npm install --legacy-peer-deps</code></pre>
+        </div>
+
+        <h3>Permission Errors</h3>
+        <p><strong>Symptom:</strong> EACCES or permission denied errors</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <ul>
+            <li><strong>Don't use sudo:</strong> Avoid <code>sudo npm install</code></li>
+            <li><strong>Fix npm permissions:</strong> Follow <a href="https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally" target="_blank">npm docs</a></li>
+            <li><strong>Use nvm:</strong> Node Version Manager handles permissions better</li>
+        </ul>
+
+        <h2>Environment Configuration</h2>
+
+        <h3>Missing API Key Error</h3>
+        <p><strong>Symptom:</strong> "GEMINI_API_KEY is not configured" error</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <ol>
+            <li>Verify <code>.env.local</code> exists in project root</li>
+            <li>Check file contents:
+                <div class="code-block">
+                    <pre><code>GEMINI_API_KEY="your-api-key-here"</code></pre>
+                </div>
+            </li>
+            <li>Ensure no spaces around the <code>=</code> sign</li>
+            <li>Restart development server after creating/editing .env.local</li>
+            <li>Verify API key is valid in <a href="https://makersuite.google.com/" target="_blank">Google AI Studio</a></li>
+        </ol>
+
+        <h3>Environment Variables Not Loading</h3>
+        <p><strong>Symptom:</strong> Variables undefined in application</p>
+        
+        <p><strong>Checklist:</strong></p>
+        <ul>
+            <li>File named exactly <code>.env.local</code> (not .txt or other extension)</li>
+            <li>File in project root directory (same level as package.json)</li>
+            <li>Server restarted after changes</li>
+            <li>No typos in variable names</li>
+            <li>Using double quotes for values with spaces</li>
+        </ul>
+
+        <div class="warning">
+            <strong>Note:</strong> Next.js only loads environment variables starting with <code>NEXT_PUBLIC_</code> in the browser. Server-only variables like <code>GEMINI_API_KEY</code> are only available in API routes.
+        </div>
+
+        <h2>Runtime Errors</h2>
+
+        <h3>API Request Failures</h3>
+        <p><strong>Symptom:</strong> "Failed to generate comparison" error</p>
+        
+        <p><strong>Possible Causes & Solutions:</strong></p>
+
+        <h4>1. Invalid API Key</h4>
+        <ul>
+            <li>Verify key in Google AI Studio</li>
+            <li>Check for extra spaces or quotes in .env.local</li>
+            <li>Ensure key hasn't been revoked or expired</li>
+        </ul>
+
+        <h4>2. Network Issues</h4>
+        <ul>
+            <li>Check internet connection</li>
+            <li>Verify no firewall blocking Google APIs</li>
+            <li>Test with: <code>curl https://generativelanguage.googleapis.com</code></li>
+        </ul>
+
+        <h4>3. API Quota Exceeded</h4>
+        <ul>
+            <li>Check usage in Google AI Studio</li>
+            <li>Wait for quota reset or upgrade plan</li>
+            <li>Monitor API usage patterns</li>
+        </ul>
+
+        <h4>4. Gemini Service Down</h4>
+        <ul>
+            <li>Check <a href="https://status.cloud.google.com/" target="_blank">Google Cloud Status</a></li>
+            <li>Try again later if service is degraded</li>
+        </ul>
+
+        <h3>Parsing Errors</h3>
+        <p><strong>Symptom:</strong> "Unable to parse input" or "Unable to parse line" error</p>
+        
+        <p><strong>Solutions:</strong></p>
+
+        <h4>For JSON Format</h4>
+        <div class="code-block">
+            <div class="code-block-header">Common JSON Issues</div>
+            <pre><code>// ❌ Missing quotes
+{ Color: Red }
+
+// ✅ Correct
+{ "Color": "Red" }
+
+// ❌ Trailing comma
+{ "Color": "Red", }
+
+// ✅ Correct
+{ "Color": "Red" }
+
+// ❌ Single quotes
+{ 'Color': 'Red' }
+
+// ✅ Correct
+{ "Color": "Red" }</code></pre>
+        </div>
+
+        <h4>For Colon-Separated Format</h4>
+        <div class="code-block">
+            <div class="code-block-header">Common Issues</div>
+            <pre><code>// ❌ Missing colon
+Color Red
+
+// ✅ Correct
+Color: Red
+
+// ❌ Empty value
+Color:
+
+// ✅ Correct
+Color: Red</code></pre>
+        </div>
+
+        <h3>Empty Results</h3>
+        <p><strong>Symptom:</strong> No results displayed after comparison</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <ul>
+            <li>Check browser console for errors (F12 or Cmd+Option+I)</li>
+            <li>Verify API returned data (Network tab in browser dev tools)</li>
+            <li>Ensure at least one attribute provided</li>
+            <li>Try with simple example first</li>
+        </ul>
+
+        <h2>Build Issues</h2>
+
+        <h3>Build Failures</h3>
+        <p><strong>Symptom:</strong> <code>npm run build</code> fails</p>
+        
+        <p><strong>Common Causes:</strong></p>
+
+        <h4>TypeScript Errors</h4>
+        <div class="code-block">
+            <pre><code># Run type check separately
+npx tsc --noEmit
+
+# Fix reported errors</code></pre>
+        </div>
+
+        <h4>ESLint Errors</h4>
+        <div class="code-block">
+            <pre><code># Run linter
+npm run lint
+
+# Auto-fix if possible
+npx next lint --fix</code></pre>
+        </div>
+
+        <h4>Out of Memory</h4>
+        <div class="code-block">
+            <pre><code># Increase Node.js memory limit
+NODE_OPTIONS="--max-old-space-size=4096" npm run build</code></pre>
+        </div>
+
+        <h3>Build Succeeds But Start Fails</h3>
+        <p><strong>Symptom:</strong> <code>npm run start</code> doesn't work after successful build</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <ul>
+            <li>Verify .next directory exists</li>
+            <li>Check for port conflicts</li>
+            <li>Try clean build:
+                <div class="code-block">
+                    <pre><code>rm -rf .next
+npm run build
+npm run start</code></pre>
+                </div>
+            </li>
+        </ul>
+
+        <h2>Docker Issues</h2>
+
+        <h3>Build Failures</h3>
+        <p><strong>Symptom:</strong> Docker build fails</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <div class="code-block">
+            <pre><code># Build without cache
+docker build --no-cache -t sku-comparator .
+
+# Check Docker version
+docker --version
+# Should be 20.10 or newer
+
+# Verify Dockerfile exists
+ls -la Dockerfile</code></pre>
+        </div>
+
+        <h3>Container Exits Immediately</h3>
+        <p><strong>Symptom:</strong> Container starts then stops</p>
+        
+        <p><strong>Debug Steps:</strong></p>
+        <div class="code-block">
+            <pre><code># Check logs
+docker logs sku-comparator
+
+# Run interactively
+docker run -it --entrypoint /bin/sh sku-comparator
+
+# Check for missing environment variables
+docker exec sku-comparator env | grep GEMINI</code></pre>
+        </div>
+
+        <h3>Cannot Access Application</h3>
+        <p><strong>Symptom:</strong> Can't reach http://localhost:3000</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <div class="code-block">
+            <pre><code># Verify container is running
+docker ps
+
+# Check port mapping
+docker port sku-comparator
+
+# Test from within container
+docker exec sku-comparator curl localhost:3000
+
+# Check firewall settings
+# Ensure port 3000 is not blocked</code></pre>
+        </div>
+
+        <h2>Performance Issues</h2>
+
+        <h3>Slow Response Times</h3>
+        <p><strong>Symptom:</strong> Comparisons take longer than 10 seconds</p>
+        
+        <p><strong>Possible Causes:</strong></p>
+        <ul>
+            <li><strong>Too many attributes:</strong> Reduce to 5-20 attributes</li>
+            <li><strong>Network latency:</strong> Check internet connection speed</li>
+            <li><strong>Gemini API load:</strong> Wait and try again during off-peak hours</li>
+            <li><strong>Complex SKU:</strong> Use simpler, more specific SKU identifiers</li>
+        </ul>
+
+        <h3>High Memory Usage</h3>
+        <p><strong>Symptom:</strong> Application uses too much memory</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <ul>
+            <li>Restart development server periodically</li>
+            <li>Clear browser cache and reload</li>
+            <li>Limit number of concurrent comparisons</li>
+            <li>Use production build instead of dev: <code>npm run build && npm run start</code></li>
+        </ul>
+
+        <h2>Browser Issues</h2>
+
+        <h3>UI Not Rendering Correctly</h3>
+        <p><strong>Symptom:</strong> Styles missing or layout broken</p>
+        
+        <p><strong>Solutions:</strong></p>
+        <ul>
+            <li>Hard refresh browser: Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (Mac)</li>
+            <li>Clear browser cache</li>
+            <li>Try different browser (Chrome, Firefox, Safari, Edge)</li>
+            <li>Disable browser extensions temporarily</li>
+            <li>Check browser console for errors</li>
+        </ul>
+
+        <h3>Dark Mode Issues</h3>
+        <p><strong>Symptom:</strong> Colors or contrast problems</p>
+        
+        <p><strong>Note:</strong> The application only supports dark mode. There's no light mode toggle. The dark class is applied at the HTML level in <code>app/layout.tsx</code>.</p>
+
+        <h2>Getting Help</h2>
+
+        <h3>Before Asking for Help</h3>
+        <ol>
+            <li>Check this troubleshooting guide</li>
+            <li>Review the <a href="faq.html">FAQ</a></li>
+            <li>Check browser console for errors</li>
+            <li>Review server logs if running production</li>
+            <li>Try with minimal example</li>
+        </ol>
+
+        <h3>Information to Provide</h3>
+        <p>When reporting issues, include:</p>
+        <ul>
+            <li>Node.js version: <code>node --version</code></li>
+            <li>npm version: <code>npm --version</code></li>
+            <li>Operating system and version</li>
+            <li>Browser and version (if UI issue)</li>
+            <li>Error messages (full text)</li>
+            <li>Steps to reproduce</li>
+            <li>What you expected vs what happened</li>
+        </ul>
+
+        <h3>Debug Checklist</h3>
+        <div class="code-block">
+            <pre><code># System info
+node --version
+npm --version
+docker --version  # if using Docker
+
+# Check files
+ls -la .env.local
+cat package.json | grep version
+
+# Check processes
+lsof -i :3000  # Check if port is in use
+
+# Environment
+echo $NODE_ENV
+printenv | grep GEMINI  # Check if var is set
+
+# Logs
+npm run dev  # Check startup logs
+docker logs sku-comparator  # Docker logs</code></pre>
+        </div>
+
+        <div class="callout">
+            <h3>💡 Quick Fixes</h3>
+            <p>Many issues can be resolved with:</p>
+            <ol>
+                <li>Restart development server</li>
+                <li>Clear npm cache and reinstall</li>
+                <li>Check .env.local file</li>
+                <li>Hard refresh browser</li>
+                <li>Try clean build</li>
+            </ol>
+        </div>
+
+        <div class="next-steps">
+            <h2>Need More Help?</h2>
+            <div class="button-group">
+                <a href="faq.html" class="button-primary">Check FAQ</a>
+                <a href="installation.html" class="button-secondary">Installation Guide</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

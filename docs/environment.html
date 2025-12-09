@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environment Configuration - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Environment Configuration</h1>
+        
+        <div class="intro">
+            <p>Complete guide to configuring environment variables and settings for the SKU Specification Comparator.</p>
+        </div>
+
+        <h2>Environment Files</h2>
+
+        <h3>File Types</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>File</th>
+                    <th>Purpose</th>
+                    <th>When Used</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>.env.local</code></td>
+                    <td>Local development settings</td>
+                    <td>Development and local testing</td>
+                </tr>
+                <tr>
+                    <td><code>.env.production</code></td>
+                    <td>Production settings</td>
+                    <td>Production builds</td>
+                </tr>
+                <tr>
+                    <td><code>.env.local.example</code></td>
+                    <td>Template for environment file</td>
+                    <td>Documentation and setup</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Priority Order</h3>
+        <p>Environment variables are loaded in this priority (highest to lowest):</p>
+        <ol>
+            <li>System environment variables</li>
+            <li><code>.env.local</code></li>
+            <li><code>.env.production</code> or <code>.env.development</code></li>
+            <li><code>.env</code></li>
+        </ol>
+
+        <h2>Required Variables</h2>
+
+        <h3>GEMINI_API_KEY</h3>
+        <div class="code-block">
+            <pre><code>GEMINI_API_KEY="your-google-gemini-api-key"</code></pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Required</strong></td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td><strong>Format</strong></td>
+                    <td>API key from Google AI Studio</td>
+                </tr>
+                <tr>
+                    <td><strong>Example</strong></td>
+                    <td>"AIzaSyD..."</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Purpose:</strong> Authenticates requests to Google Gemini API</p>
+        <p><strong>Where to get it:</strong> <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></p>
+
+        <h4>Setup Steps</h4>
+        <ol>
+            <li>Visit Google AI Studio</li>
+            <li>Sign in with your Google account</li>
+            <li>Click "Get API Key" or "Create API Key"</li>
+            <li>Copy the generated key</li>
+            <li>Add to your <code>.env.local</code> file</li>
+        </ol>
+
+        <div class="warning">
+            <strong>Security Warning:</strong> Never commit your API key to version control. The <code>.env.local</code> file is already in <code>.gitignore</code>.
+        </div>
+
+        <h2>Optional Variables</h2>
+
+        <h3>PORT</h3>
+        <div class="code-block">
+            <pre><code>PORT=3000</code></pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Required</strong></td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td>Number</td>
+                </tr>
+                <tr>
+                    <td><strong>Default</strong></td>
+                    <td>3000</td>
+                </tr>
+                <tr>
+                    <td><strong>Valid Range</strong></td>
+                    <td>1-65535</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Purpose:</strong> Specifies which port the application listens on</p>
+
+        <h3>NODE_ENV</h3>
+        <div class="code-block">
+            <pre><code>NODE_ENV=production</code></pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Required</strong></td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td><strong>Valid Values</strong></td>
+                    <td>development, production, test</td>
+                </tr>
+                <tr>
+                    <td><strong>Default</strong></td>
+                    <td>development</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Purpose:</strong> Controls application behavior and optimizations</p>
+        <p><strong>Effects:</strong></p>
+        <ul>
+            <li><strong>development:</strong> Detailed errors, hot reloading, verbose logging</li>
+            <li><strong>production:</strong> Optimized bundles, minimal logging, error boundaries</li>
+            <li><strong>test:</strong> Special handling for testing environments</li>
+        </ul>
+
+        <h3>NEXT_TELEMETRY_DISABLED</h3>
+        <div class="code-block">
+            <pre><code>NEXT_TELEMETRY_DISABLED=1</code></pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Required</strong></td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td>String (1 or 0)</td>
+                </tr>
+                <tr>
+                    <td><strong>Default</strong></td>
+                    <td>0 (enabled)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Purpose:</strong> Controls Next.js anonymous telemetry collection</p>
+        <p><strong>When to use:</strong> Set to 1 to disable telemetry for privacy or compliance</p>
+
+        <h2>Configuration Examples</h2>
+
+        <h3>Development Configuration</h3>
+        <div class="code-block">
+            <div class="code-block-header">.env.local</div>
+            <pre><code>GEMINI_API_KEY="your-development-api-key"
+PORT=3000
+NODE_ENV=development</code></pre>
+        </div>
+
+        <h3>Production Configuration</h3>
+        <div class="code-block">
+            <div class="code-block-header">.env.production</div>
+            <pre><code>GEMINI_API_KEY="your-production-api-key"
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1</code></pre>
+        </div>
+
+        <h3>Docker Configuration</h3>
+        <div class="code-block">
+            <div class="code-block-header">.env.local</div>
+            <pre><code>GEMINI_API_KEY="your-api-key"
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1
+PORT=3000</code></pre>
+        </div>
+
+        <h2>Loading Environment Variables</h2>
+
+        <h3>Next.js Auto-Loading</h3>
+        <p>Next.js automatically loads environment variables from:</p>
+        <ul>
+            <li><code>.env.local</code> (all environments, highest priority)</li>
+            <li><code>.env.production</code> or <code>.env.development</code></li>
+            <li><code>.env</code> (all environments)</li>
+        </ul>
+
+        <h3>Variable Types</h3>
+
+        <h4>Server-Side Only (Default)</h4>
+        <div class="code-block">
+            <pre><code>GEMINI_API_KEY="secret-key"</code></pre>
+        </div>
+        <p>Available only in API routes and server components. Not exposed to browser.</p>
+
+        <h4>Browser-Exposed (NEXT_PUBLIC_)</h4>
+        <div class="code-block">
+            <pre><code>NEXT_PUBLIC_API_URL="https://api.example.com"</code></pre>
+        </div>
+        <p>Variables prefixed with <code>NEXT_PUBLIC_</code> are embedded in browser JavaScript.</p>
+
+        <div class="warning">
+            <strong>Important:</strong> Never prefix sensitive values like API keys with <code>NEXT_PUBLIC_</code>. This would expose them to all users.
+        </div>
+
+        <h2>Verification</h2>
+
+        <h3>Check Environment Variables</h3>
+
+        <h4>In Development</h4>
+        <p>Add temporary logging to verify variables are loaded:</p>
+        <div class="code-block">
+            <div class="code-block-header">app/api/compare/route.ts</div>
+            <pre><code>console.log('API Key present:', !!process.env.GEMINI_API_KEY);
+console.log('Node env:', process.env.NODE_ENV);</code></pre>
+        </div>
+
+        <h4>In Docker Container</h4>
+        <div class="code-block">
+            <pre><code># Check environment in running container
+docker exec sku-comparator env
+
+# Filter for specific variable
+docker exec sku-comparator env | grep GEMINI</code></pre>
+        </div>
+
+        <h3>Troubleshooting Missing Variables</h3>
+
+        <h4>Variables Not Loading</h4>
+        <ul>
+            <li>Verify file name is exactly <code>.env.local</code> (not .env.local.txt)</li>
+            <li>Check file is in project root directory</li>
+            <li>Restart development server after changing .env file</li>
+            <li>Verify no typos in variable names</li>
+            <li>Check for proper format (no spaces around =)</li>
+        </ul>
+
+        <h4>Invalid Format</h4>
+        <div class="code-block">
+            <div class="code-block-header">❌ Invalid</div>
+            <pre><code>GEMINI_API_KEY = "key"  # Spaces around =
+GEMINI_API_KEY='key'    # Single quotes may cause issues</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">✅ Valid</div>
+            <pre><code>GEMINI_API_KEY="key"
+GEMINI_API_KEY=key      # Quotes optional for simple values</code></pre>
+        </div>
+
+        <h2>Security Best Practices</h2>
+
+        <h3>API Key Security</h3>
+        <ul>
+            <li>Never commit <code>.env.local</code> to version control</li>
+            <li>Use different keys for development and production</li>
+            <li>Rotate keys periodically</li>
+            <li>Limit API key permissions if possible</li>
+            <li>Monitor API usage for anomalies</li>
+        </ul>
+
+        <h3>Secrets Management</h3>
+
+        <h4>For Production</h4>
+        <ul>
+            <li>Use platform-specific secrets (Vercel, AWS Secrets Manager, etc.)</li>
+            <li>Consider using Docker secrets for containerized deployments</li>
+            <li>Use environment variable injection from CI/CD</li>
+            <li>Encrypt sensitive files if stored in repositories</li>
+        </ul>
+
+        <h4>For Teams</h4>
+        <ul>
+            <li>Share <code>.env.local.example</code> with team</li>
+            <li>Use secret managers (1Password, HashiCorp Vault)</li>
+            <li>Document which keys are needed</li>
+            <li>Provide instructions for obtaining keys</li>
+        </ul>
+
+        <h3>Git Configuration</h3>
+        <p>Ensure <code>.gitignore</code> includes:</p>
+        <div class="code-block">
+            <div class="code-block-header">.gitignore</div>
+            <pre><code># Environment files
+.env*.local
+.env.production
+.env.development</code></pre>
+        </div>
+
+        <h2>Platform-Specific Configuration</h2>
+
+        <h3>Vercel</h3>
+        <ol>
+            <li>Go to Project Settings</li>
+            <li>Navigate to Environment Variables</li>
+            <li>Add <code>GEMINI_API_KEY</code></li>
+            <li>Select environments (Production, Preview, Development)</li>
+            <li>Save and redeploy</li>
+        </ol>
+
+        <h3>Netlify</h3>
+        <ol>
+            <li>Go to Site Settings</li>
+            <li>Navigate to Build & Deploy → Environment</li>
+            <li>Add <code>GEMINI_API_KEY</code> variable</li>
+            <li>Save and redeploy</li>
+        </ol>
+
+        <h3>AWS (ECS/Fargate)</h3>
+        <div class="code-block">
+            <div class="code-block-header">Task Definition</div>
+            <pre><code>{
+  "environment": [
+    {
+      "name": "NODE_ENV",
+      "value": "production"
+    }
+  ],
+  "secrets": [
+    {
+      "name": "GEMINI_API_KEY",
+      "valueFrom": "arn:aws:secretsmanager:..."
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <h2>Environment Variable Reference</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Required</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>GEMINI_API_KEY</code></td>
+                    <td>✅ Yes</td>
+                    <td>-</td>
+                    <td>Google Gemini API authentication key</td>
+                </tr>
+                <tr>
+                    <td><code>PORT</code></td>
+                    <td>❌ No</td>
+                    <td>3000</td>
+                    <td>Application port number</td>
+                </tr>
+                <tr>
+                    <td><code>NODE_ENV</code></td>
+                    <td>❌ No</td>
+                    <td>development</td>
+                    <td>Environment mode</td>
+                </tr>
+                <tr>
+                    <td><code>NEXT_TELEMETRY_DISABLED</code></td>
+                    <td>❌ No</td>
+                    <td>0</td>
+                    <td>Disable Next.js telemetry</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <h3>💡 Quick Setup</h3>
+            <pre><code># Copy example file
+cp .env.local.example .env.local
+
+# Edit and add your API key
+nano .env.local
+
+# Start development server
+npm run dev</code></pre>
+        </div>
+
+        <div class="next-steps">
+            <h2>Related Topics</h2>
+            <div class="button-group">
+                <a href="installation.html" class="button-primary">Installation Guide</a>
+                <a href="docker.html" class="button-secondary">Docker Deployment</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

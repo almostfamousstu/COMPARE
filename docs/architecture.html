@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Overview - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Architecture Overview</h1>
+        
+        <div class="intro">
+            <p>Learn about the technical architecture of the SKU Specification Comparator, including code organization, design patterns, and technology choices.</p>
+        </div>
+
+        <h2>Technology Stack</h2>
+
+        <h3>Core Technologies</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Technology</th>
+                    <th>Version</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Next.js</strong></td>
+                    <td>14.2.3</td>
+                    <td>React framework with App Router</td>
+                </tr>
+                <tr>
+                    <td><strong>React</strong></td>
+                    <td>18.3.1</td>
+                    <td>UI component library</td>
+                </tr>
+                <tr>
+                    <td><strong>TypeScript</strong></td>
+                    <td>5.4.3</td>
+                    <td>Type-safe JavaScript</td>
+                </tr>
+                <tr>
+                    <td><strong>Tailwind CSS</strong></td>
+                    <td>3.4.3</td>
+                    <td>Utility-first CSS framework</td>
+                </tr>
+                <tr>
+                    <td><strong>Node.js</strong></td>
+                    <td>18.17.0+</td>
+                    <td>JavaScript runtime</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Key Dependencies</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Package</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>@google/generative-ai</code></td>
+                    <td>Google Gemini SDK for AI integration</td>
+                </tr>
+                <tr>
+                    <td><code>shadcn/ui</code></td>
+                    <td>Accessible, customizable UI components</td>
+                </tr>
+                <tr>
+                    <td><code>class-variance-authority</code></td>
+                    <td>Component variant management</td>
+                </tr>
+                <tr>
+                    <td><code>lucide-react</code></td>
+                    <td>Icon library</td>
+                </tr>
+                <tr>
+                    <td><code>tailwind-merge</code></td>
+                    <td>Tailwind class merging utility</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Project Structure</h2>
+
+        <h3>Directory Layout</h3>
+        <div class="code-block">
+            <pre><code>COMPARE/
+├── app/                      # Next.js App Router directory
+│   ├── api/                  # API routes
+│   │   └── compare/
+│   │       └── route.ts      # Comparison API endpoint
+│   ├── layout.tsx            # Root layout component
+│   ├── page.tsx              # Home page component
+│   └── globals.css           # Global styles
+│
+├── components/               # React components
+│   ├── ui/                   # shadcn/ui components
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── input.tsx
+│   │   ├── switch.tsx
+│   │   ├── table.tsx
+│   │   ├── textarea.tsx
+│   │   └── skeleton.tsx
+│   └── comparison-table.tsx  # Custom comparison component
+│
+├── lib/                      # Utility functions
+│   ├── comparison.ts         # Comparison logic
+│   ├── parse.ts              # Input parsing
+│   └── utils.ts              # General utilities
+│
+├── public/                   # Static assets
+│
+├── docs/                     # Documentation files
+│
+├── .env.local.example        # Environment template
+├── package.json              # Dependencies and scripts
+├── tsconfig.json             # TypeScript configuration
+├── tailwind.config.ts        # Tailwind configuration
+├── next.config.mjs           # Next.js configuration
+├── Dockerfile                # Docker build configuration
+└── README.md                 # Project readme
+</code></pre>
+        </div>
+
+        <h2>Application Architecture</h2>
+
+        <h3>Architectural Pattern</h3>
+        <p>The application follows a <strong>client-server architecture</strong> with these layers:</p>
+
+        <h4>1. Presentation Layer (Client)</h4>
+        <ul>
+            <li><strong>Location:</strong> <code>app/page.tsx</code></li>
+            <li><strong>Responsibility:</strong> User interface and interactions</li>
+            <li><strong>Technologies:</strong> React, Tailwind CSS, shadcn/ui</li>
+            <li><strong>Pattern:</strong> Component-based architecture</li>
+        </ul>
+
+        <h4>2. API Layer (Server)</h4>
+        <ul>
+            <li><strong>Location:</strong> <code>app/api/compare/route.ts</code></li>
+            <li><strong>Responsibility:</strong> Request handling, business logic</li>
+            <li><strong>Technologies:</strong> Next.js API Routes, Google Gemini SDK</li>
+            <li><strong>Pattern:</strong> RESTful API</li>
+        </ul>
+
+        <h4>3. Utility Layer</h4>
+        <ul>
+            <li><strong>Location:</strong> <code>lib/</code> directory</li>
+            <li><strong>Responsibility:</strong> Shared logic and utilities</li>
+            <li><strong>Pattern:</strong> Pure functions and helper modules</li>
+        </ul>
+
+        <h4>4. Component Layer</h4>
+        <ul>
+            <li><strong>Location:</strong> <code>components/</code> directory</li>
+            <li><strong>Responsibility:</strong> Reusable UI components</li>
+            <li><strong>Pattern:</strong> Atomic design principles</li>
+        </ul>
+
+        <h2>Data Flow</h2>
+
+        <h3>Request-Response Cycle</h3>
+        <ol class="workflow-steps">
+            <li>
+                <strong>User Input</strong>
+                <p>User enters SKU and specifications in the UI (<code>app/page.tsx</code>)</p>
+            </li>
+            <li>
+                <strong>Client-Side Validation</strong>
+                <p>Input parsed and validated using <code>lib/parse.ts</code></p>
+            </li>
+            <li>
+                <strong>API Request</strong>
+                <p>Client sends POST request to <code>/api/compare</code></p>
+            </li>
+            <li>
+                <strong>Server Processing</strong>
+                <p>API route validates request and builds JSON schema</p>
+            </li>
+            <li>
+                <strong>AI Integration</strong>
+                <p>Server calls Google Gemini with structured output</p>
+            </li>
+            <li>
+                <strong>Response Generation</strong>
+                <p>AI returns structured JSON with specifications</p>
+            </li>
+            <li>
+                <strong>Comparison</strong>
+                <p>Client compares values using <code>lib/comparison.ts</code></p>
+            </li>
+            <li>
+                <strong>UI Update</strong>
+                <p>Results displayed in comparison table component</p>
+            </li>
+        </ol>
+
+        <h2>Component Architecture</h2>
+
+        <h3>Component Hierarchy</h3>
+        <div class="code-block">
+            <pre><code>RootLayout (app/layout.tsx)
+└── HomePage (app/page.tsx)
+    ├── Card (components/ui/card.tsx)
+    │   ├── Input (components/ui/input.tsx)
+    │   ├── Textarea (components/ui/textarea.tsx)
+    │   └── Button (components/ui/button.tsx)
+    │
+    └── ComparisonTable (components/comparison-table.tsx)
+        ├── Switch (components/ui/switch.tsx)
+        └── Table (components/ui/table.tsx)
+            ├── TableHeader
+            ├── TableBody
+            └── TableRow
+                └── TableCell</code></pre>
+        </div>
+
+        <h3>Component Types</h3>
+
+        <h4>Client Components</h4>
+        <p>Components marked with <code>"use client"</code> directive:</p>
+        <ul>
+            <li><code>app/page.tsx</code> - Main page with state and interactions</li>
+            <li><code>components/comparison-table.tsx</code> - Interactive table</li>
+            <li>All <code>components/ui/*</code> - Interactive UI elements</li>
+        </ul>
+
+        <h4>Server Components</h4>
+        <p>Components without client directive:</p>
+        <ul>
+            <li><code>app/layout.tsx</code> - Root layout wrapper</li>
+        </ul>
+
+        <h4>API Routes</h4>
+        <p>Server-side endpoints:</p>
+        <ul>
+            <li><code>app/api/compare/route.ts</code> - Comparison endpoint</li>
+        </ul>
+
+        <h2>Design Patterns</h2>
+
+        <h3>State Management</h3>
+        <ul>
+            <li><strong>Pattern:</strong> React useState hooks</li>
+            <li><strong>Scope:</strong> Component-local state</li>
+            <li><strong>No global state:</strong> Simple application doesn't require Redux/Context</li>
+        </ul>
+
+        <h3>Data Fetching</h3>
+        <ul>
+            <li><strong>Pattern:</strong> Client-side fetch with async/await</li>
+            <li><strong>Error Handling:</strong> Try-catch blocks with user-friendly messages</li>
+            <li><strong>Loading States:</strong> Boolean flags for UI feedback</li>
+        </ul>
+
+        <h3>Input Parsing</h3>
+        <ul>
+            <li><strong>Pattern:</strong> Strategy pattern (try JSON, fallback to colon-separated)</li>
+            <li><strong>Location:</strong> <code>lib/parse.ts</code></li>
+            <li><strong>Error Handling:</strong> Descriptive error messages</li>
+        </ul>
+
+        <h3>Comparison Logic</h3>
+        <ul>
+            <li><strong>Pattern:</strong> Pure function with normalization</li>
+            <li><strong>Location:</strong> <code>lib/comparison.ts</code></li>
+            <li><strong>Algorithm:</strong> Case-insensitive string comparison with trimming</li>
+        </ul>
+
+        <h2>Styling Architecture</h2>
+
+        <h3>Tailwind CSS</h3>
+        <ul>
+            <li><strong>Approach:</strong> Utility-first with component composition</li>
+            <li><strong>Configuration:</strong> <code>tailwind.config.ts</code></li>
+            <li><strong>Theme:</strong> Dark mode by default with custom color palette</li>
+            <li><strong>Plugins:</strong> tailwindcss-animate for animations</li>
+        </ul>
+
+        <h3>Component Styling</h3>
+        <ul>
+            <li><strong>Base Components:</strong> shadcn/ui with Tailwind classes</li>
+            <li><strong>Variants:</strong> class-variance-authority for component variants</li>
+            <li><strong>Utilities:</strong> tailwind-merge for conditional class merging</li>
+        </ul>
+
+        <h2>Build & Deployment</h2>
+
+        <h3>Build Process</h3>
+        <ol>
+            <li><strong>TypeScript Compilation:</strong> TSC compiles .ts/.tsx to JavaScript</li>
+            <li><strong>Next.js Build:</strong> Optimizes pages, creates bundles</li>
+            <li><strong>CSS Processing:</strong> Tailwind generates optimized CSS</li>
+            <li><strong>Asset Optimization:</strong> Images and static files processed</li>
+            <li><strong>Output:</strong> Static and dynamic assets in <code>.next/</code></li>
+        </ol>
+
+        <h3>Docker Architecture</h3>
+        <p>Multi-stage build for optimal image size:</p>
+        <ol>
+            <li><strong>Base:</strong> Node.js 20 slim image</li>
+            <li><strong>Dependencies:</strong> npm install stage</li>
+            <li><strong>Builder:</strong> Application build stage</li>
+            <li><strong>Runner:</strong> Minimal production runtime</li>
+        </ol>
+
+        <h2>Performance Considerations</h2>
+
+        <h3>Client-Side Optimizations</h3>
+        <ul>
+            <li><strong>Code Splitting:</strong> Next.js automatic code splitting</li>
+            <li><strong>Memoization:</strong> useMemo for expensive computations</li>
+            <li><strong>Lazy Loading:</strong> Components loaded on demand</li>
+            <li><strong>Minimal Re-renders:</strong> Efficient state management</li>
+        </ul>
+
+        <h3>Server-Side Optimizations</h3>
+        <ul>
+            <li><strong>API Routes:</strong> Serverless functions with fast cold starts</li>
+            <li><strong>Structured Output:</strong> JSON schema reduces AI processing time</li>
+            <li><strong>No Database:</strong> Stateless design for scalability</li>
+        </ul>
+
+        <h2>Security Architecture</h2>
+
+        <h3>API Key Protection</h3>
+        <ul>
+            <li><strong>Server-Side Only:</strong> API key never exposed to client</li>
+            <li><strong>Environment Variables:</strong> Secure configuration management</li>
+            <li><strong>No Logging:</strong> API keys not logged or stored</li>
+        </ul>
+
+        <h3>Data Privacy</h3>
+        <ul>
+            <li><strong>Minimal Data Sharing:</strong> Only attribute keys sent to AI</li>
+            <li><strong>No Persistence:</strong> No database, no data storage</li>
+            <li><strong>Client-Side Comparison:</strong> Sensitive comparison logic runs in browser</li>
+        </ul>
+
+        <h3>Input Validation</h3>
+        <ul>
+            <li><strong>Client-Side:</strong> Immediate feedback for invalid input</li>
+            <li><strong>Server-Side:</strong> Comprehensive validation in API route</li>
+            <li><strong>Type Safety:</strong> TypeScript prevents type errors</li>
+        </ul>
+
+        <h2>Testing Strategy</h2>
+
+        <h3>Type Checking</h3>
+        <ul>
+            <li><strong>Tool:</strong> TypeScript compiler</li>
+            <li><strong>Coverage:</strong> Full type coverage across codebase</li>
+            <li><strong>Run:</strong> Automatically during <code>npm run build</code></li>
+        </ul>
+
+        <h3>Linting</h3>
+        <ul>
+            <li><strong>Tool:</strong> ESLint with Next.js config</li>
+            <li><strong>Rules:</strong> Next.js best practices, React hooks</li>
+            <li><strong>Run:</strong> <code>npm run lint</code></li>
+        </ul>
+
+        <h2>Scalability Considerations</h2>
+
+        <h3>Horizontal Scaling</h3>
+        <ul>
+            <li><strong>Stateless Design:</strong> No server-side state</li>
+            <li><strong>API Routes:</strong> Serverless functions scale automatically</li>
+            <li><strong>Docker Ready:</strong> Container-based deployment</li>
+        </ul>
+
+        <h3>Performance Limits</h3>
+        <ul>
+            <li><strong>API Rate Limits:</strong> Constrained by Gemini API quotas</li>
+            <li><strong>Response Time:</strong> 2-5 seconds per comparison</li>
+            <li><strong>Concurrent Requests:</strong> Limited by hosting platform</li>
+        </ul>
+
+        <h2>Future Architecture Considerations</h2>
+
+        <h3>Potential Enhancements</h3>
+        <ul>
+            <li><strong>Caching:</strong> Cache AI responses for common SKUs</li>
+            <li><strong>Database:</strong> Store comparison history</li>
+            <li><strong>Authentication:</strong> User accounts and API keys</li>
+            <li><strong>Rate Limiting:</strong> Protect against abuse</li>
+            <li><strong>Batch Processing:</strong> Compare multiple SKUs at once</li>
+            <li><strong>Analytics:</strong> Track usage and patterns</li>
+        </ul>
+
+        <div class="callout">
+            <h3>📐 Architecture Principles</h3>
+            <ul>
+                <li><strong>Simplicity:</strong> Minimal complexity for maintainability</li>
+                <li><strong>Type Safety:</strong> TypeScript throughout for reliability</li>
+                <li><strong>Privacy:</strong> User data never leaves the client unnecessarily</li>
+                <li><strong>Performance:</strong> Fast responses with optimized builds</li>
+                <li><strong>Scalability:</strong> Stateless design for easy scaling</li>
+            </ul>
+        </div>
+
+        <div class="next-steps">
+            <h2>Related Topics</h2>
+            <div class="button-group">
+                <a href="components.html" class="button-primary">Component Reference</a>
+                <a href="api.html" class="button-secondary">API Reference</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

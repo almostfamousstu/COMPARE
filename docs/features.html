@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features & Tools - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Features & Tools</h1>
+        
+        <div class="intro">
+            <p>Discover all the built-in features and tools available in the SKU Specification Comparator application.</p>
+        </div>
+
+        <h2>Core Features</h2>
+
+        <h3>AI-Powered Specification Generation</h3>
+        <p>The application leverages Google Gemini 2.5 Flash to generate product specifications based on SKU identifiers.</p>
+        <ul>
+            <li><strong>Model:</strong> Gemini 2.5 Flash - optimized for speed and accuracy</li>
+            <li><strong>Context-aware:</strong> Uses SKU information to provide relevant specifications</li>
+            <li><strong>Structured output:</strong> Ensures responses match your exact attribute schema</li>
+            <li><strong>Consistent format:</strong> Always returns data in the same structure as your input</li>
+        </ul>
+
+        <h3>Flexible Input Parsing</h3>
+        <p>The application intelligently parses multiple input formats without requiring you to specify which format you're using.</p>
+
+        <h4>JSON Input</h4>
+        <div class="code-block">
+            <pre><code>{
+  "Attribute1": "Value1",
+  "Attribute2": "Value2"
+}</code></pre>
+        </div>
+        <ul>
+            <li>Standard JSON object format</li>
+            <li>All values converted to strings automatically</li>
+            <li>Handles nested values by stringifying them</li>
+        </ul>
+
+        <h4>Colon-Separated Input</h4>
+        <div class="code-block">
+            <pre><code>Attribute1: Value1
+Attribute2: Value2</code></pre>
+        </div>
+        <ul>
+            <li>Simple line-by-line format</li>
+            <li>Automatic whitespace trimming</li>
+            <li>Supports colons within values (everything after first colon)</li>
+        </ul>
+
+        <h3>Visual Difference Highlighting</h3>
+        <p>The application uses color-coded highlighting to make mismatches immediately obvious.</p>
+        <ul>
+            <li><strong>Subtle row highlighting:</strong> Entire rows with mismatches have an amber tint</li>
+            <li><strong>Cell highlighting:</strong> LLM Value cells with differences are prominently highlighted</li>
+            <li><strong>Color scheme:</strong> Amber/orange tones for warnings without being alarming</li>
+            <li><strong>Accessible:</strong> High contrast ratios for visibility</li>
+        </ul>
+
+        <h3>Interactive Difference Filter</h3>
+        <p>Toggle between viewing all attributes or only those with differences.</p>
+        <ul>
+            <li><strong>Quick toggle:</strong> Single click to switch views</li>
+            <li><strong>Instant update:</strong> Table filters immediately without page reload</li>
+            <li><strong>Contextual message:</strong> Shows count when all differences are hidden</li>
+            <li><strong>Preserved state:</strong> Setting remembered across comparisons</li>
+        </ul>
+
+        <h3>Real-Time Comparison Summary</h3>
+        <p>See at-a-glance statistics about your comparison:</p>
+        <ul>
+            <li><strong>Total attributes:</strong> Count of all compared specifications</li>
+            <li><strong>Mismatch count:</strong> Number of differences detected</li>
+            <li><strong>Perfect match indicator:</strong> Special message when all values align</li>
+            <li><strong>Dynamic updates:</strong> Updates with each new comparison</li>
+        </ul>
+
+        <h2>User Interface Features</h2>
+
+        <h3>Dark Mode Design</h3>
+        <p>The application features a sleek, modern dark interface optimized for extended use.</p>
+        <ul>
+            <li><strong>Eye-friendly:</strong> Reduced eye strain during long sessions</li>
+            <li><strong>High contrast:</strong> Clear text readability</li>
+            <li><strong>Gradient background:</strong> Visual depth with slate color palette</li>
+            <li><strong>Themed components:</strong> All UI elements follow the dark theme</li>
+        </ul>
+
+        <h3>Responsive Layout</h3>
+        <p>Works seamlessly across all device sizes:</p>
+        <ul>
+            <li><strong>Desktop:</strong> Full-width layout with optimal reading width (max 1280px)</li>
+            <li><strong>Tablet:</strong> Adaptive layout with adjusted spacing</li>
+            <li><strong>Mobile:</strong> Stacked layout with horizontal scrolling table</li>
+            <li><strong>Touch-optimized:</strong> Larger tap targets on mobile devices</li>
+        </ul>
+
+        <h3>Loading States</h3>
+        <p>Clear visual feedback during API calls:</p>
+        <ul>
+            <li><strong>Button state:</strong> Text changes to "Comparing…"</li>
+            <li><strong>Disabled interactions:</strong> Prevents duplicate submissions</li>
+            <li><strong>Skeleton loaders:</strong> Animated placeholders in result table</li>
+            <li><strong>Smooth transitions:</strong> Fade-in effects when results load</li>
+        </ul>
+
+        <h3>Error Messaging</h3>
+        <p>User-friendly error handling throughout the application:</p>
+        <ul>
+            <li><strong>Inline errors:</strong> Displayed prominently above the submit button</li>
+            <li><strong>Color-coded:</strong> Red background for high visibility</li>
+            <li><strong>Descriptive messages:</strong> Clear explanation of what went wrong</li>
+            <li><strong>Actionable:</strong> Suggests how to fix the problem</li>
+        </ul>
+
+        <h3>Hover Effects</h3>
+        <p>Interactive elements provide visual feedback:</p>
+        <ul>
+            <li><strong>Button hover:</strong> Subtle upward translation</li>
+            <li><strong>Table row hover:</strong> Background color change</li>
+            <li><strong>Link hover:</strong> Color transition and underline</li>
+            <li><strong>Smooth animations:</strong> 200ms transitions for polish</li>
+        </ul>
+
+        <h2>Data Processing Features</h2>
+
+        <h3>Smart Comparison Logic</h3>
+        <p>The comparison algorithm includes intelligent matching:</p>
+        <ul>
+            <li><strong>Case-insensitive:</strong> "Red" matches "red"</li>
+            <li><strong>Whitespace trimming:</strong> Leading/trailing spaces ignored</li>
+            <li><strong>Normalization:</strong> Values converted to lowercase for comparison</li>
+            <li><strong>Exact display:</strong> Original values shown without modification</li>
+        </ul>
+
+        <h3>Structured Output Enforcement</h3>
+        <p>Ensures AI responses match your schema exactly:</p>
+        <ul>
+            <li><strong>JSON schema validation:</strong> Response must match defined structure</li>
+            <li><strong>Required fields:</strong> All your attribute keys must be present</li>
+            <li><strong>No extra fields:</strong> AI cannot add attributes you didn't specify</li>
+            <li><strong>Type safety:</strong> All values returned as strings</li>
+        </ul>
+
+        <h3>Automatic Format Detection</h3>
+        <p>The parser tries JSON first, then falls back to colon-separated:</p>
+        <ul>
+            <li><strong>JSON parsing:</strong> Validates and extracts object properties</li>
+            <li><strong>Fallback parsing:</strong> Splits on colons and line breaks</li>
+            <li><strong>Error reporting:</strong> Specific feedback on which line failed to parse</li>
+            <li><strong>Flexible handling:</strong> Converts non-string values to strings</li>
+        </ul>
+
+        <h2>Built-in Tools</h2>
+
+        <h3>Input Validation</h3>
+        <p>Comprehensive validation before API calls:</p>
+        <ul>
+            <li><strong>SKU presence:</strong> Ensures SKU field is not empty</li>
+            <li><strong>Format validation:</strong> Checks that input can be parsed</li>
+            <li><strong>Minimum attributes:</strong> Requires at least one key-value pair</li>
+            <li><strong>Client-side validation:</strong> Fast feedback without server round-trip</li>
+        </ul>
+
+        <h3>Default Examples</h3>
+        <p>Pre-filled examples help new users get started quickly:</p>
+        <ul>
+            <li><strong>Default SKU:</strong> "SKU-90210"</li>
+            <li><strong>Sample attributes:</strong> Color, Material, Battery Life</li>
+            <li><strong>JSON format:</strong> Shows proper formatting</li>
+            <li><strong>Runnable immediately:</strong> Can compare without modifications</li>
+        </ul>
+
+        <h3>Privacy Protection</h3>
+        <p>Your data is handled securely:</p>
+        <ul>
+            <li><strong>Keys-only transmission:</strong> Only attribute names sent to AI, not your values</li>
+            <li><strong>No storage:</strong> Comparisons not saved or logged</li>
+            <li><strong>Client-side processing:</strong> Comparison logic runs in your browser</li>
+            <li><strong>Secure API calls:</strong> HTTPS for all network requests</li>
+        </ul>
+
+        <h2>Accessibility Features</h2>
+
+        <h3>Keyboard Navigation</h3>
+        <ul>
+            <li><strong>Tab order:</strong> Logical progression through interactive elements</li>
+            <li><strong>Focus indicators:</strong> Clear visual focus states</li>
+            <li><strong>Enter to submit:</strong> Form submission from input fields</li>
+            <li><strong>Switch control:</strong> Space bar to toggle "Show only differences"</li>
+        </ul>
+
+        <h3>Semantic HTML</h3>
+        <ul>
+            <li><strong>Proper labels:</strong> All inputs have associated labels</li>
+            <li><strong>ARIA attributes:</strong> Screen reader support via shadcn/ui</li>
+            <li><strong>Heading hierarchy:</strong> Logical document structure</li>
+            <li><strong>Table semantics:</strong> Proper thead/tbody/th/td usage</li>
+        </ul>
+
+        <h3>High Contrast</h3>
+        <ul>
+            <li><strong>Text contrast:</strong> Meets WCAG AA standards</li>
+            <li><strong>Interactive elements:</strong> Clear distinction from background</li>
+            <li><strong>Highlight colors:</strong> Sufficient contrast for mismatch indicators</li>
+        </ul>
+
+        <h2>Performance Features</h2>
+
+        <h3>Optimized Rendering</h3>
+        <ul>
+            <li><strong>Memoization:</strong> React useMemo for filtered data</li>
+            <li><strong>Client components:</strong> Efficient state management</li>
+            <li><strong>Minimal re-renders:</strong> Only affected components update</li>
+            <li><strong>Lazy loading:</strong> Results only render after comparison</li>
+        </ul>
+
+        <h3>Efficient API Calls</h3>
+        <ul>
+            <li><strong>Single endpoint:</strong> One API route for comparisons</li>
+            <li><strong>Minimal payload:</strong> Only necessary data transmitted</li>
+            <li><strong>Fast model:</strong> Gemini 2.5 Flash for quick responses</li>
+            <li><strong>Error handling:</strong> Graceful degradation on failures</li>
+        </ul>
+
+        <h2>Developer Tools Integration</h2>
+
+        <h3>Console Logging</h3>
+        <p>Server-side errors logged for debugging:</p>
+        <ul>
+            <li><strong>API errors:</strong> Detailed Gemini error messages</li>
+            <li><strong>Request tracking:</strong> Logged in server console</li>
+            <li><strong>Stack traces:</strong> Available for debugging issues</li>
+        </ul>
+
+        <h3>TypeScript Support</h3>
+        <ul>
+            <li><strong>Full type coverage:</strong> End-to-end type safety</li>
+            <li><strong>Interface definitions:</strong> Clear contracts between components</li>
+            <li><strong>Compile-time checks:</strong> Catch errors before runtime</li>
+            <li><strong>IntelliSense:</strong> Better developer experience in IDEs</li>
+        </ul>
+
+        <div class="callout">
+            <h3>🎯 Feature Highlights</h3>
+            <ul>
+                <li>Zero configuration needed for basic usage</li>
+                <li>Intelligent input parsing handles multiple formats</li>
+                <li>Visual diff highlighting makes mismatches obvious</li>
+                <li>Privacy-focused: your values never sent to AI</li>
+                <li>Responsive design works on any device</li>
+                <li>Fast responses with Gemini 2.5 Flash</li>
+            </ul>
+        </div>
+
+        <div class="next-steps">
+            <h2>Explore More</h2>
+            <div class="button-group">
+                <a href="input-formats.html" class="button-primary">Input Format Details</a>
+                <a href="comparison.html" class="button-secondary">Understanding Comparisons</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

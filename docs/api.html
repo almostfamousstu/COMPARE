@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>API Reference</h1>
+        
+        <div class="intro">
+            <p>Complete reference for the SKU Comparator API endpoint, including request/response formats, parameters, and error handling.</p>
+        </div>
+
+        <h2>API Overview</h2>
+        <p>The SKU Comparator exposes a single API endpoint for performing specification comparisons:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Endpoint</th>
+                    <th>Method</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>/api/compare</code></td>
+                    <td>POST</td>
+                    <td>Compare SKU specifications using Google Gemini</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>/api/compare</h2>
+
+        <h3>Endpoint Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>URL</strong></td>
+                    <td>/api/compare</td>
+                </tr>
+                <tr>
+                    <td><strong>Method</strong></td>
+                    <td>POST</td>
+                </tr>
+                <tr>
+                    <td><strong>Content-Type</strong></td>
+                    <td>application/json</td>
+                </tr>
+                <tr>
+                    <td><strong>Authentication</strong></td>
+                    <td>None (API key configured server-side)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Request Format</h3>
+
+        <h4>Request Body</h4>
+        <div class="code-block">
+            <div class="code-block-header">JSON Schema</div>
+            <pre><code>{
+  "sku": string,          // Required: Product SKU identifier
+  "userKVPairs": {        // Required: User specifications
+    [key: string]: string // Attribute name to value mapping
+  }
+}</code></pre>
+        </div>
+
+        <h4>Request Example</h4>
+        <div class="code-block">
+            <div class="code-block-header">POST /api/compare</div>
+            <pre><code>{
+  "sku": "SKU-90210",
+  "userKVPairs": {
+    "Color": "Crimson",
+    "Material": "Aluminum",
+    "Battery Life": "18 hours"
+  }
+}</code></pre>
+        </div>
+
+        <h4>Request Parameters</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Required</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>sku</code></td>
+                    <td>string</td>
+                    <td>✅ Yes</td>
+                    <td>Product SKU identifier. Must be non-empty string.</td>
+                </tr>
+                <tr>
+                    <td><code>userKVPairs</code></td>
+                    <td>object</td>
+                    <td>✅ Yes</td>
+                    <td>Map of attribute names to values. Must contain at least one entry.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Response Format</h3>
+
+        <h4>Success Response (200 OK)</h4>
+        <div class="code-block">
+            <div class="code-block-header">JSON Schema</div>
+            <pre><code>{
+  "llmKVPairs": {         // AI-generated specifications
+    [key: string]: string // Same keys as input, AI-generated values
+  }
+}</code></pre>
+        </div>
+
+        <h4>Success Example</h4>
+        <div class="code-block">
+            <div class="code-block-header">Response</div>
+            <pre><code>{
+  "llmKVPairs": {
+    "Color": "Crimson Red",
+    "Material": "Aluminum",
+    "Battery Life": "Up to 18 hours"
+  }
+}</code></pre>
+        </div>
+
+        <h4>Response Fields</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>llmKVPairs</code></td>
+                    <td>object</td>
+                    <td>AI-generated specification values for the provided attribute keys</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Error Responses</h3>
+
+        <h4>400 Bad Request</h4>
+        <p>Returned when the request is malformed or missing required fields.</p>
+
+        <div class="code-block">
+            <div class="code-block-header">Response</div>
+            <pre><code>{
+  "error": "Error message describing the issue"
+}</code></pre>
+        </div>
+
+        <p><strong>Common causes:</strong></p>
+        <ul>
+            <li>Invalid JSON in request body</li>
+            <li>Missing <code>sku</code> parameter</li>
+            <li>Empty <code>sku</code> string</li>
+            <li>Missing or invalid <code>userKVPairs</code></li>
+            <li>Empty <code>userKVPairs</code> object</li>
+        </ul>
+
+        <h4>Error Examples</h4>
+        <div class="code-block">
+            <div class="code-block-header">Invalid Request Body</div>
+            <pre><code>{
+  "error": "Invalid request body"
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">Missing SKU</div>
+            <pre><code>{
+  "error": "SKU is required"
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">Invalid userKVPairs</div>
+            <pre><code>{
+  "error": "userKVPairs must be an object"
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">Empty Attributes</div>
+            <pre><code>{
+  "error": "Provide at least one attribute to compare"
+}</code></pre>
+        </div>
+
+        <h4>500 Internal Server Error</h4>
+        <p>Returned when there's a server-side error or API failure.</p>
+
+        <div class="code-block">
+            <div class="code-block-header">Response</div>
+            <pre><code>{
+  "error": "Error message"
+}</code></pre>
+        </div>
+
+        <p><strong>Common causes:</strong></p>
+        <ul>
+            <li>Missing or invalid <code>GEMINI_API_KEY</code></li>
+            <li>Google Gemini API error</li>
+            <li>Network timeout or connectivity issue</li>
+            <li>Invalid response from Gemini</li>
+        </ul>
+
+        <h4>Server Error Examples</h4>
+        <div class="code-block">
+            <div class="code-block-header">Missing API Key</div>
+            <pre><code>{
+  "error": "GEMINI_API_KEY is not configured"
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">Generation Failure</div>
+            <pre><code>{
+  "error": "Failed to generate comparison"
+}</code></pre>
+        </div>
+
+        <h2>Usage Examples</h2>
+
+        <h3>cURL</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>curl -X POST http://localhost:3000/api/compare \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sku": "SKU-90210",
+    "userKVPairs": {
+      "Color": "Red",
+      "Material": "Steel"
+    }
+  }'</code></pre>
+        </div>
+
+        <h3>JavaScript (Fetch API)</h3>
+        <div class="code-block">
+            <div class="code-block-header">JavaScript</div>
+            <pre><code>const response = await fetch('/api/compare', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    sku: 'SKU-90210',
+    userKVPairs: {
+      Color: 'Red',
+      Material: 'Steel'
+    }
+  })
+});
+
+if (!response.ok) {
+  const { error } = await response.json();
+  throw new Error(error);
+}
+
+const data = await response.json();
+console.log(data.llmKVPairs);</code></pre>
+        </div>
+
+        <h3>Python</h3>
+        <div class="code-block">
+            <div class="code-block-header">Python</div>
+            <pre><code>import requests
+import json
+
+url = 'http://localhost:3000/api/compare'
+payload = {
+    'sku': 'SKU-90210',
+    'userKVPairs': {
+        'Color': 'Red',
+        'Material': 'Steel'
+    }
+}
+
+response = requests.post(url, json=payload)
+
+if response.status_code == 200:
+    data = response.json()
+    print(data['llmKVPairs'])
+else:
+    error = response.json()
+    print(f"Error: {error['error']}")</code></pre>
+        </div>
+
+        <h3>Node.js (axios)</h3>
+        <div class="code-block">
+            <div class="code-block-header">Node.js</div>
+            <pre><code>const axios = require('axios');
+
+async function compareSpecs() {
+  try {
+    const response = await axios.post('http://localhost:3000/api/compare', {
+      sku: 'SKU-90210',
+      userKVPairs: {
+        Color: 'Red',
+        Material: 'Steel'
+      }
+    });
+    
+    console.log(response.data.llmKVPairs);
+  } catch (error) {
+    if (error.response) {
+      console.error('Error:', error.response.data.error);
+    } else {
+      console.error('Request failed:', error.message);
+    }
+  }
+}
+
+compareSpecs();</code></pre>
+        </div>
+
+        <h2>Implementation Details</h2>
+
+        <h3>AI Model Configuration</h3>
+        <ul>
+            <li><strong>Model:</strong> gemini-2.5-flash</li>
+            <li><strong>Response Format:</strong> Structured JSON with schema validation</li>
+            <li><strong>System Prompt:</strong> Instructs AI to act as SKU Specification Generator</li>
+            <li><strong>Schema Enforcement:</strong> Ensures response matches input keys exactly</li>
+        </ul>
+
+        <h3>Request Processing Flow</h3>
+        <ol class="workflow-steps">
+            <li>
+                <strong>Validate Request</strong>
+                <p>Check request body format and required fields</p>
+            </li>
+            <li>
+                <strong>Sanitize Input</strong>
+                <p>Convert all values to strings and clean keys</p>
+            </li>
+            <li>
+                <strong>Build JSON Schema</strong>
+                <p>Generate schema from user-provided attribute keys</p>
+            </li>
+            <li>
+                <strong>Call Gemini API</strong>
+                <p>Send SKU and attribute keys to AI model</p>
+            </li>
+            <li>
+                <strong>Validate Response</strong>
+                <p>Ensure AI response matches expected schema</p>
+            </li>
+            <li>
+                <strong>Return Results</strong>
+                <p>Send AI-generated values back to client</p>
+            </li>
+        </ol>
+
+        <h3>Privacy & Security</h3>
+        <ul>
+            <li><strong>Attribute Keys Only:</strong> Only attribute names (keys) are sent to Gemini, not your values</li>
+            <li><strong>No Data Storage:</strong> Requests and responses are not logged or stored</li>
+            <li><strong>API Key Protection:</strong> Gemini API key is server-side only, never exposed to client</li>
+            <li><strong>Input Sanitization:</strong> All inputs are converted to strings to prevent injection</li>
+        </ul>
+
+        <h3>Rate Limiting</h3>
+        <p>The API endpoint does not implement rate limiting. Consider these factors:</p>
+        <ul>
+            <li><strong>Gemini API Limits:</strong> Subject to Google's API rate limits</li>
+            <li><strong>Cost:</strong> Each request consumes Gemini API quota</li>
+            <li><strong>Recommendation:</strong> Implement client-side throttling for production use</li>
+        </ul>
+
+        <h2>Error Handling Best Practices</h2>
+
+        <h3>Client-Side</h3>
+        <div class="code-block">
+            <div class="code-block-header">Error Handling Example</div>
+            <pre><code>async function compareSpecs(sku, specs) {
+  try {
+    const response = await fetch('/api/compare', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sku, userKVPairs: specs })
+    });
+    
+    if (!response.ok) {
+      const { error } = await response.json()
+        .catch(() => ({ error: 'Unknown error' }));
+      throw new Error(error);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Comparison failed:', error.message);
+    // Handle error appropriately
+    throw error;
+  }
+}</code></pre>
+        </div>
+
+        <h3>Retry Logic</h3>
+        <div class="code-block">
+            <div class="code-block-header">Retry Example</div>
+            <pre><code>async function compareWithRetry(sku, specs, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await compareSpecs(sku, specs);
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+}</code></pre>
+        </div>
+
+        <h2>Response Time</h2>
+        <p>Expected response times vary based on several factors:</p>
+        <ul>
+            <li><strong>Typical:</strong> 2-5 seconds</li>
+            <li><strong>Factors:</strong> Number of attributes, API load, network latency</li>
+            <li><strong>Timeout:</strong> Consider implementing 30-second timeout</li>
+        </ul>
+
+        <div class="callout">
+            <h3>🔒 Security Note</h3>
+            <p>The API endpoint only accepts POST requests and requires valid JSON. Your specification values are never sent to Google Gemini - only the attribute keys are shared. This ensures your proprietary data remains private.</p>
+        </div>
+
+        <div class="next-steps">
+            <h2>Related Topics</h2>
+            <div class="button-group">
+                <a href="architecture.html" class="button-primary">Architecture Overview</a>
+                <a href="components.html" class="button-secondary">Component Reference</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

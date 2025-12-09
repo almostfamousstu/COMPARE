@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Reference - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Component Reference</h1>
+        
+        <div class="intro">
+            <p>Detailed reference for all React components used in the SKU Specification Comparator application.</p>
+        </div>
+
+        <h2>Component Overview</h2>
+        <p>The application uses a combination of custom components and shadcn/ui components built on Radix UI primitives.</p>
+
+        <h2>Page Components</h2>
+
+        <h3>RootLayout</h3>
+        <p><strong>File:</strong> <code>app/layout.tsx</code></p>
+        <p><strong>Type:</strong> Server Component</p>
+        
+        <p><strong>Purpose:</strong> Root layout wrapper for the entire application</p>
+        
+        <p><strong>Features:</strong></p>
+        <ul>
+            <li>Sets HTML language to "en"</li>
+            <li>Applies dark class to HTML element</li>
+            <li>Configures Inter font from Google Fonts</li>
+            <li>Defines application metadata (title, description)</li>
+        </ul>
+
+        <p><strong>Metadata:</strong></p>
+        <ul>
+            <li><strong>Title:</strong> "SKU Spec Comparator"</li>
+            <li><strong>Description:</strong> "Compare your SKU specifications with Gemini-generated values"</li>
+        </ul>
+
+        <h3>HomePage</h3>
+        <p><strong>File:</strong> <code>app/page.tsx</code></p>
+        <p><strong>Type:</strong> Client Component</p>
+        
+        <p><strong>Purpose:</strong> Main application page with form and comparison logic</p>
+        
+        <p><strong>State Management:</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>State Variable</th>
+                    <th>Type</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>sku</code></td>
+                    <td>string</td>
+                    <td>Current SKU input value</td>
+                </tr>
+                <tr>
+                    <td><code>rawInput</code></td>
+                    <td>string</td>
+                    <td>User's specification input</td>
+                </tr>
+                <tr>
+                    <td><code>comparison</code></td>
+                    <td>ComparisonResult[]</td>
+                    <td>Array of comparison results</td>
+                </tr>
+                <tr>
+                    <td><code>error</code></td>
+                    <td>string | null</td>
+                    <td>Error message if any</td>
+                </tr>
+                <tr>
+                    <td><code>showOnlyDiffs</code></td>
+                    <td>boolean</td>
+                    <td>Filter toggle state</td>
+                </tr>
+                <tr>
+                    <td><code>isLoading</code></td>
+                    <td>boolean</td>
+                    <td>API request status</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Key Functions:</strong></p>
+        <ul>
+            <li><code>handleSubmit</code> - Form submission handler</li>
+            <li><code>parseUserInput</code> - Parse input specifications</li>
+            <li><code>buildComparisonResults</code> - Create comparison data</li>
+        </ul>
+
+        <h2>Custom Components</h2>
+
+        <h3>ComparisonTable</h3>
+        <p><strong>File:</strong> <code>components/comparison-table.tsx</code></p>
+        <p><strong>Type:</strong> Client Component</p>
+        
+        <p><strong>Purpose:</strong> Display comparison results in an interactive table</p>
+        
+        <p><strong>Props:</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Prop</th>
+                    <th>Type</th>
+                    <th>Required</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>data</code></td>
+                    <td>ComparisonResult[]</td>
+                    <td>✅ Yes</td>
+                    <td>Array of comparison results</td>
+                </tr>
+                <tr>
+                    <td><code>loading</code></td>
+                    <td>boolean</td>
+                    <td>❌ No</td>
+                    <td>Show loading state</td>
+                </tr>
+                <tr>
+                    <td><code>showOnlyDiffs</code></td>
+                    <td>boolean</td>
+                    <td>✅ Yes</td>
+                    <td>Current filter state</td>
+                </tr>
+                <tr>
+                    <td><code>onToggleShowOnlyDiffs</code></td>
+                    <td>(value: boolean) => void</td>
+                    <td>✅ Yes</td>
+                    <td>Toggle callback</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+            <li>Filters rows based on <code>showOnlyDiffs</code> prop</li>
+            <li>Shows loading skeleton during API calls</li>
+            <li>Highlights mismatched rows with amber background</li>
+            <li>Displays empty state when no results</li>
+            <li>Responsive with horizontal scroll on mobile</li>
+        </ul>
+
+        <p><strong>Child Components:</strong></p>
+        <ul>
+            <li><code>LoadingState</code> - Skeleton loader</li>
+            <li><code>EmptyState</code> - No results message</li>
+        </ul>
+
+        <h2>UI Components (shadcn/ui)</h2>
+
+        <h3>Button</h3>
+        <p><strong>File:</strong> <code>components/ui/button.tsx</code></p>
+        
+        <p><strong>Variants:</strong></p>
+        <ul>
+            <li><code>default</code> - Primary blue button</li>
+            <li><code>destructive</code> - Red button for dangerous actions</li>
+            <li><code>outline</code> - Outlined button</li>
+            <li><code>secondary</code> - Secondary styled button</li>
+            <li><code>ghost</code> - Transparent button</li>
+            <li><code>link</code> - Link-styled button</li>
+        </ul>
+
+        <p><strong>Sizes:</strong></p>
+        <ul>
+            <li><code>default</code> - Standard size</li>
+            <li><code>sm</code> - Small button</li>
+            <li><code>lg</code> - Large button</li>
+            <li><code>icon</code> - Square icon button</li>
+        </ul>
+
+        <p><strong>Usage Example:</strong></p>
+        <div class="code-block">
+            <pre><code>&lt;Button type="submit" disabled={isLoading}&gt;
+  {isLoading ? "Comparing…" : "Compare SKU"}
+&lt;/Button&gt;</code></pre>
+        </div>
+
+        <h3>Card</h3>
+        <p><strong>File:</strong> <code>components/ui/card.tsx</code></p>
+        
+        <p><strong>Sub-components:</strong></p>
+        <ul>
+            <li><code>Card</code> - Container wrapper</li>
+            <li><code>CardHeader</code> - Header section</li>
+            <li><code>CardTitle</code> - Title text</li>
+            <li><code>CardDescription</code> - Description text</li>
+            <li><code>CardContent</code> - Main content area</li>
+            <li><code>CardFooter</code> - Footer section</li>
+        </ul>
+
+        <p><strong>Usage Example:</strong></p>
+        <div class="code-block">
+            <pre><code>&lt;Card&gt;
+  &lt;CardHeader&gt;
+    &lt;CardTitle&gt;Specification input&lt;/CardTitle&gt;
+    &lt;CardDescription&gt;Enter the SKU and attributes&lt;/CardDescription&gt;
+  &lt;/CardHeader&gt;
+  &lt;CardContent&gt;
+    {/* Form content */}
+  &lt;/CardContent&gt;
+&lt;/Card&gt;</code></pre>
+        </div>
+
+        <h3>Input</h3>
+        <p><strong>File:</strong> <code>components/ui/input.tsx</code></p>
+        
+        <p><strong>Props:</strong> Extends standard HTML input attributes</p>
+        
+        <p><strong>Features:</strong></p>
+        <ul>
+            <li>Styled text input field</li>
+            <li>Dark theme compatible</li>
+            <li>Focus states with ring effect</li>
+            <li>Disabled state styling</li>
+        </ul>
+
+        <p><strong>Usage Example:</strong></p>
+        <div class="code-block">
+            <pre><code>&lt;Input
+  id="sku"
+  placeholder="SKU-90210"
+  value={sku}
+  onChange={(e) => setSku(e.target.value)}
+  autoComplete="off"
+/&gt;</code></pre>
+        </div>
+
+        <h3>Textarea</h3>
+        <p><strong>File:</strong> <code>components/ui/textarea.tsx</code></p>
+        
+        <p><strong>Props:</strong> Extends standard HTML textarea attributes</p>
+        
+        <p><strong>Features:</strong></p>
+        <ul>
+            <li>Multi-line text input</li>
+            <li>Monospace font option via className</li>
+            <li>Resizable by default</li>
+            <li>Scrollbar styling</li>
+        </ul>
+
+        <p><strong>Usage Example:</strong></p>
+        <div class="code-block">
+            <pre><code>&lt;Textarea
+  id="user-input"
+  value={rawInput}
+  onChange={(e) => setRawInput(e.target.value)}
+  className="min-h-[220px] font-mono text-xs"
+  placeholder='{"Color": "Red"}'
+/&gt;</code></pre>
+        </div>
+
+        <h3>Switch</h3>
+        <p><strong>File:</strong> <code>components/ui/switch.tsx</code></p>
+        <p><strong>Base:</strong> @radix-ui/react-switch</p>
+        
+        <p><strong>Props:</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Prop</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>checked</code></td>
+                    <td>boolean</td>
+                    <td>Current state</td>
+                </tr>
+                <tr>
+                    <td><code>onCheckedChange</code></td>
+                    <td>(checked: boolean) => void</td>
+                    <td>Change handler</td>
+                </tr>
+                <tr>
+                    <td><code>disabled</code></td>
+                    <td>boolean</td>
+                    <td>Disable interaction</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Usage Example:</strong></p>
+        <div class="code-block">
+            <pre><code>&lt;Switch
+  checked={showOnlyDiffs}
+  onCheckedChange={(checked) => setShowOnlyDiffs(checked)}
+/&gt;</code></pre>
+        </div>
+
+        <h3>Table</h3>
+        <p><strong>File:</strong> <code>components/ui/table.tsx</code></p>
+        
+        <p><strong>Sub-components:</strong></p>
+        <ul>
+            <li><code>Table</code> - Main table wrapper</li>
+            <li><code>TableHeader</code> - Header section (thead)</li>
+            <li><code>TableBody</code> - Body section (tbody)</li>
+            <li><code>TableFooter</code> - Footer section (tfoot)</li>
+            <li><code>TableRow</code> - Table row (tr)</li>
+            <li><code>TableHead</code> - Header cell (th)</li>
+            <li><code>TableCell</code> - Data cell (td)</li>
+            <li><code>TableCaption</code> - Table caption</li>
+        </ul>
+
+        <p><strong>Usage Example:</strong></p>
+        <div class="code-block">
+            <pre><code>&lt;Table&gt;
+  &lt;TableHeader&gt;
+    &lt;TableRow&gt;
+      &lt;TableHead&gt;Attribute&lt;/TableHead&gt;
+      &lt;TableHead&gt;Your Value&lt;/TableHead&gt;
+      &lt;TableHead&gt;LLM Value&lt;/TableHead&gt;
+    &lt;/TableRow&gt;
+  &lt;/TableHeader&gt;
+  &lt;TableBody&gt;
+    {data.map(row => (
+      &lt;TableRow key={row.attribute}&gt;
+        &lt;TableCell&gt;{row.attribute}&lt;/TableCell&gt;
+        &lt;TableCell&gt;{row.userValue}&lt;/TableCell&gt;
+        &lt;TableCell&gt;{row.llmValue}&lt;/TableCell&gt;
+      &lt;/TableRow&gt;
+    ))}
+  &lt;/TableBody&gt;
+&lt;/Table&gt;</code></pre>
+        </div>
+
+        <h3>Skeleton</h3>
+        <p><strong>File:</strong> <code>components/ui/skeleton.tsx</code></p>
+        
+        <p><strong>Purpose:</strong> Loading placeholder component</p>
+        
+        <p><strong>Features:</strong></p>
+        <ul>
+            <li>Animated pulse effect</li>
+            <li>Customizable size via className</li>
+            <li>Dark theme compatible</li>
+        </ul>
+
+        <p><strong>Usage Example:</strong></p>
+        <div class="code-block">
+            <pre><code>&lt;Skeleton className="h-12 w-full" /&gt;</code></pre>
+        </div>
+
+        <h2>Utility Modules</h2>
+
+        <h3>comparison.ts</h3>
+        <p><strong>File:</strong> <code>lib/comparison.ts</code></p>
+        
+        <p><strong>Exports:</strong></p>
+        <ul>
+            <li><code>ComparisonResult</code> - Interface for comparison results</li>
+            <li><code>buildComparisonResults</code> - Function to build comparison array</li>
+        </ul>
+
+        <p><strong>ComparisonResult Interface:</strong></p>
+        <div class="code-block">
+            <pre><code>interface ComparisonResult {
+  attribute: string;    // Attribute name
+  userValue: string;    // User's value
+  llmValue: string;     // AI-generated value
+  isMismatch: boolean;  // Whether values differ
+}</code></pre>
+        </div>
+
+        <p><strong>buildComparisonResults Function:</strong></p>
+        <ul>
+            <li><strong>Parameters:</strong> <code>user: KeyValueRecord</code>, <code>llm: KeyValueRecord</code></li>
+            <li><strong>Returns:</strong> <code>ComparisonResult[]</code></li>
+            <li><strong>Logic:</strong> Merges keys, compares normalized values, sorts alphabetically</li>
+        </ul>
+
+        <h3>parse.ts</h3>
+        <p><strong>File:</strong> <code>lib/parse.ts</code></p>
+        
+        <p><strong>Exports:</strong></p>
+        <ul>
+            <li><code>KeyValueRecord</code> - Type alias for <code>Record&lt;string, string&gt;</code></li>
+            <li><code>parseUserInput</code> - Function to parse user input</li>
+        </ul>
+
+        <p><strong>parseUserInput Function:</strong></p>
+        <ul>
+            <li><strong>Parameters:</strong> <code>raw: string</code></li>
+            <li><strong>Returns:</strong> <code>KeyValueRecord</code></li>
+            <li><strong>Throws:</strong> Error if parsing fails</li>
+            <li><strong>Logic:</strong> Try JSON first, fallback to colon-separated</li>
+        </ul>
+
+        <h3>utils.ts</h3>
+        <p><strong>File:</strong> <code>lib/utils.ts</code></p>
+        
+        <p><strong>Exports:</strong></p>
+        <ul>
+            <li><code>cn</code> - Class name utility function</li>
+        </ul>
+
+        <p><strong>cn Function:</strong></p>
+        <ul>
+            <li><strong>Parameters:</strong> <code>...inputs: ClassValue[]</code></li>
+            <li><strong>Returns:</strong> <code>string</code></li>
+            <li><strong>Purpose:</strong> Merge Tailwind classes with conflict resolution</li>
+            <li><strong>Implementation:</strong> Uses <code>clsx</code> and <code>tailwind-merge</code></li>
+        </ul>
+
+        <p><strong>Usage Example:</strong></p>
+        <div class="code-block">
+            <pre><code>className={cn(
+  "base-classes",
+  isMismatch && "highlight-classes",
+  customClassName
+)}</code></pre>
+        </div>
+
+        <h2>Type Definitions</h2>
+
+        <h3>API Types</h3>
+        <div class="code-block">
+            <div class="code-block-header">app/api/compare/route.ts</div>
+            <pre><code>interface CompareRequestBody {
+  sku?: string;
+  userKVPairs?: Record&lt;string, string&gt;;
+}</code></pre>
+        </div>
+
+        <h3>Component Types</h3>
+        <div class="code-block">
+            <div class="code-block-header">app/page.tsx</div>
+            <pre><code>interface CompareResponse {
+  llmKVPairs: KeyValueRecord;
+}</code></pre>
+        </div>
+
+        <h2>Component Best Practices</h2>
+
+        <h3>Component Design</h3>
+        <ul>
+            <li><strong>Single Responsibility:</strong> Each component has one clear purpose</li>
+            <li><strong>Composition:</strong> Build complex UIs from simple components</li>
+            <li><strong>Type Safety:</strong> All props and state typed with TypeScript</li>
+            <li><strong>Accessibility:</strong> ARIA attributes via Radix UI</li>
+        </ul>
+
+        <h3>State Management</h3>
+        <ul>
+            <li><strong>Local State:</strong> Use useState for component-specific state</li>
+            <li><strong>Derived State:</strong> Use useMemo for computed values</li>
+            <li><strong>Lifting State:</strong> Share state through props</li>
+            <li><strong>No Global State:</strong> Application complexity doesn't require it</li>
+        </ul>
+
+        <h3>Styling</h3>
+        <ul>
+            <li><strong>Tailwind First:</strong> Use utility classes for styling</li>
+            <li><strong>Component Variants:</strong> class-variance-authority for variants</li>
+            <li><strong>Conditional Classes:</strong> Use cn() utility for merging</li>
+            <li><strong>Consistent Spacing:</strong> Follow Tailwind spacing scale</li>
+        </ul>
+
+        <div class="callout">
+            <h3>🎨 Component Philosophy</h3>
+            <ul>
+                <li>Small, focused components are easier to test and maintain</li>
+                <li>Composition over inheritance for flexibility</li>
+                <li>Type safety prevents runtime errors</li>
+                <li>Accessibility is built-in, not bolted-on</li>
+                <li>Performance through React best practices</li>
+            </ul>
+        </div>
+
+        <div class="next-steps">
+            <h2>Related Topics</h2>
+            <div class="button-group">
+                <a href="architecture.html" class="button-primary">Architecture Overview</a>
+                <a href="api.html" class="button-secondary">API Reference</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>
