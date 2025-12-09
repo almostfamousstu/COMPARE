@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Comparisons - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Understanding Comparisons</h1>
+        
+        <div class="intro">
+            <p>Learn how the SKU Comparator determines matches and mismatches, and how to interpret the comparison results effectively.</p>
+        </div>
+
+        <h2>How Comparisons Work</h2>
+
+        <h3>The Comparison Process</h3>
+        <ol class="workflow-steps">
+            <li>
+                <strong>Parse Your Input</strong>
+                <p>Your specifications are parsed into key-value pairs</p>
+            </li>
+            <li>
+                <strong>Extract Attribute Keys</strong>
+                <p>Only the attribute names are sent to Google Gemini</p>
+            </li>
+            <li>
+                <strong>Generate AI Specifications</strong>
+                <p>Gemini generates values for each attribute based on the SKU</p>
+            </li>
+            <li>
+                <strong>Merge and Compare</strong>
+                <p>Your values and AI values are compared attribute by attribute</p>
+            </li>
+            <li>
+                <strong>Present Results</strong>
+                <p>Differences are highlighted in the comparison table</p>
+            </li>
+        </ol>
+
+        <h2>Comparison Logic</h2>
+
+        <h3>Value Normalization</h3>
+        <p>Before comparing values, the application normalizes them using this process:</p>
+        
+        <div class="code-block">
+            <div class="code-block-header">Normalization Steps</div>
+            <pre><code>1. Trim whitespace: "  Red  " → "Red"
+2. Convert to lowercase: "Red" → "red"
+3. Compare normalized values</code></pre>
+        </div>
+
+        <p>This means:</p>
+        <ul>
+            <li><code>"Red"</code> matches <code>"red"</code></li>
+            <li><code>"  Blue  "</code> matches <code>"blue"</code></li>
+            <li><code>"GREEN"</code> matches <code>"green"</code></li>
+        </ul>
+
+        <h3>Match Determination</h3>
+        <p>Two values are considered a match if:</p>
+        <ul>
+            <li>Normalized values are identical</li>
+            <li>Case differences are ignored</li>
+            <li>Leading/trailing whitespace is ignored</li>
+        </ul>
+
+        <p>Two values are considered a mismatch if:</p>
+        <ul>
+            <li>Normalized values differ in any way</li>
+            <li>Different words, even if similar meaning</li>
+            <li>Different formatting or units</li>
+        </ul>
+
+        <h3>Examples</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Value</th>
+                    <th>LLM Value</th>
+                    <th>Result</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Red</td>
+                    <td>red</td>
+                    <td><span class="badge badge-success">Match</span></td>
+                    <td>Case-insensitive</td>
+                </tr>
+                <tr>
+                    <td>  Blue  </td>
+                    <td>Blue</td>
+                    <td><span class="badge badge-success">Match</span></td>
+                    <td>Whitespace trimmed</td>
+                </tr>
+                <tr>
+                    <td>Aluminum</td>
+                    <td>Aluminium</td>
+                    <td><span class="badge badge-warning">Mismatch</span></td>
+                    <td>Different spelling</td>
+                </tr>
+                <tr>
+                    <td>10 lbs</td>
+                    <td>10 pounds</td>
+                    <td><span class="badge badge-warning">Mismatch</span></td>
+                    <td>Different units</td>
+                </tr>
+                <tr>
+                    <td>256GB</td>
+                    <td>256 GB</td>
+                    <td><span class="badge badge-warning">Mismatch</span></td>
+                    <td>Space difference</td>
+                </tr>
+                <tr>
+                    <td>Navy Blue</td>
+                    <td>Blue</td>
+                    <td><span class="badge badge-warning">Mismatch</span></td>
+                    <td>Different specificity</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Interpreting Results</h2>
+
+        <h3>Perfect Match</h3>
+        <p>When all attributes match, you'll see:</p>
+        <blockquote>All X attributes match Gemini's response.</blockquote>
+        
+        <p>This indicates:</p>
+        <ul>
+            <li>Strong alignment with AI knowledge</li>
+            <li>Your specifications are consistent with common understanding</li>
+            <li>High confidence in your data accuracy</li>
+        </ul>
+
+        <h3>Some Mismatches</h3>
+        <p>When some attributes differ, you'll see:</p>
+        <blockquote>X mismatches detected across Y attributes.</blockquote>
+        
+        <p>This suggests:</p>
+        <ul>
+            <li>Review highlighted attributes carefully</li>
+            <li>Some differences may be expected or intentional</li>
+            <li>AI may have different or outdated information</li>
+            <li>Terminology differences might exist</li>
+        </ul>
+
+        <h3>Many Mismatches</h3>
+        <p>If most attributes differ, consider:</p>
+        <ul>
+            <li>SKU might be too generic or unclear</li>
+            <li>Product might be custom or specialized</li>
+            <li>AI may lack knowledge about this product</li>
+            <li>Your specifications might use non-standard terminology</li>
+        </ul>
+
+        <h2>Common Mismatch Patterns</h2>
+
+        <h3>1. Terminology Variations</h3>
+        <p>Same concept, different words:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Term</th>
+                    <th>AI Term</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Aluminum</td>
+                    <td>Aluminium</td>
+                    <td>US vs UK spelling</td>
+                </tr>
+                <tr>
+                    <td>Cell Phone</td>
+                    <td>Mobile Phone</td>
+                    <td>Regional difference</td>
+                </tr>
+                <tr>
+                    <td>Colour</td>
+                    <td>Color</td>
+                    <td>Spelling variation</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>2. Unit Differences</h3>
+        <p>Same value, different representation:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Format</th>
+                    <th>AI Format</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>5 kg</td>
+                    <td>5 kilograms</td>
+                    <td>Abbreviated vs full</td>
+                </tr>
+                <tr>
+                    <td>12"</td>
+                    <td>12 inches</td>
+                    <td>Symbol vs word</td>
+                </tr>
+                <tr>
+                    <td>256GB</td>
+                    <td>256 GB</td>
+                    <td>Spacing difference</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>3. Specificity Differences</h3>
+        <p>Different levels of detail:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Value</th>
+                    <th>AI Value</th>
+                    <th>Explanation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Blue</td>
+                    <td>Navy Blue</td>
+                    <td>AI more specific</td>
+                </tr>
+                <tr>
+                    <td>Stainless Steel</td>
+                    <td>Steel</td>
+                    <td>You more specific</td>
+                </tr>
+                <tr>
+                    <td>Cotton</td>
+                    <td>100% Cotton</td>
+                    <td>AI added percentage</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>4. Format Differences</h3>
+        <p>Same information, different formatting:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Format</th>
+                    <th>AI Format</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>16:9</td>
+                    <td>16 by 9</td>
+                    <td>Ratio notation</td>
+                </tr>
+                <tr>
+                    <td>$99.99</td>
+                    <td>99.99 USD</td>
+                    <td>Currency format</td>
+                </tr>
+                <tr>
+                    <td>Yes</td>
+                    <td>True</td>
+                    <td>Boolean representation</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Using Comparison Results</h2>
+
+        <h3>Quality Assurance Workflow</h3>
+        <ol>
+            <li><strong>Run comparison</strong> with your specifications</li>
+            <li><strong>Review all mismatches</strong> in the results table</li>
+            <li><strong>Categorize differences:</strong>
+                <ul>
+                    <li>Acceptable variations (terminology, units)</li>
+                    <li>Potential errors in your data</li>
+                    <li>AI inaccuracies or outdated info</li>
+                </ul>
+            </li>
+            <li><strong>Update specifications</strong> if errors found</li>
+            <li><strong>Re-run comparison</strong> to verify changes</li>
+            <li><strong>Document decisions</strong> for future reference</li>
+        </ol>
+
+        <h3>Data Validation Workflow</h3>
+        <ol>
+            <li><strong>Toggle "Show only differences"</strong> to focus on mismatches</li>
+            <li><strong>Investigate each mismatch:</strong>
+                <ul>
+                    <li>Check source documentation</li>
+                    <li>Verify against product specifications</li>
+                    <li>Consult with domain experts</li>
+                </ul>
+            </li>
+            <li><strong>Make corrections</strong> where needed</li>
+            <li><strong>Track patterns</strong> of common differences</li>
+            <li><strong>Standardize terminology</strong> across your catalog</li>
+        </ol>
+
+        <h2>Limitations to Consider</h2>
+
+        <h3>AI Knowledge Boundaries</h3>
+        <ul>
+            <li><strong>Training data cutoff:</strong> AI may not know about very recent products</li>
+            <li><strong>Niche products:</strong> Specialized items may have less accurate data</li>
+            <li><strong>Custom products:</strong> Unique or modified items won't match standard specs</li>
+            <li><strong>Regional variations:</strong> AI might prefer certain regional terminology</li>
+        </ul>
+
+        <h3>Comparison Algorithm Limitations</h3>
+        <ul>
+            <li><strong>Exact matching:</strong> "256GB" ≠ "256 GB" (space difference)</li>
+            <li><strong>No semantic understanding:</strong> "Large" ≠ "Big" even though similar</li>
+            <li><strong>No unit conversion:</strong> "1 kg" ≠ "1000 g" even though equivalent</li>
+            <li><strong>No synonym detection:</strong> "Smartphone" ≠ "Mobile Phone"</li>
+        </ul>
+
+        <h3>When to Trust the AI</h3>
+        <p>AI responses are more reliable when:</p>
+        <ul>
+            <li>Product is well-known and widely available</li>
+            <li>SKU clearly identifies a specific product</li>
+            <li>Attributes are standard industry terms</li>
+            <li>Product has been on market for a while</li>
+        </ul>
+
+        <h3>When to Trust Your Data</h3>
+        <p>Your specifications are more reliable when:</p>
+        <ul>
+            <li>Product is custom or specialized</li>
+            <li>You have access to official specifications</li>
+            <li>Product uses non-standard terminology</li>
+            <li>Regional or industry-specific terms are used</li>
+        </ul>
+
+        <h2>Best Practices</h2>
+
+        <h3>For Accurate Comparisons</h3>
+        <ul>
+            <li>Use specific, detailed SKUs</li>
+            <li>Include brand names when relevant</li>
+            <li>Use standard industry terminology</li>
+            <li>Be consistent with units and formatting</li>
+            <li>Verify unexpected mismatches with source documentation</li>
+        </ul>
+
+        <h3>For Meaningful Results</h3>
+        <ul>
+            <li>Focus on key differentiating attributes</li>
+            <li>Don't overload with too many attributes (keep to 5-20)</li>
+            <li>Use attributes that have objective values</li>
+            <li>Avoid subjective terms like "high quality" or "best"</li>
+        </ul>
+
+        <h3>For Effective Review</h3>
+        <ul>
+            <li>Start with "Show only differences" toggled on</li>
+            <li>Investigate all highlighted mismatches</li>
+            <li>Toggle off to verify all attributes reviewed</li>
+            <li>Document reasons for acceptable differences</li>
+            <li>Standardize terminology based on findings</li>
+        </ul>
+
+        <div class="callout callout-warning">
+            <h3>⚠️ Important</h3>
+            <p>The SKU Comparator is a tool to assist with validation and quality assurance. Always verify critical specifications against official documentation. AI responses should be treated as suggestions, not absolute truth.</p>
+        </div>
+
+        <div class="note">
+            <strong>Privacy Note:</strong> Your specification values are never sent to Google Gemini. Only attribute keys (names) are shared, ensuring your proprietary data remains private while still getting valuable AI-generated comparisons.
+        </div>
+
+        <div class="next-steps">
+            <h2>Explore More</h2>
+            <div class="button-group">
+                <a href="api.html" class="button-primary">API Reference</a>
+                <a href="troubleshooting.html" class="button-secondary">Troubleshooting</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

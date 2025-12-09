@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using the Application - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Using the Application</h1>
+        
+        <div class="intro">
+            <p>This guide provides a comprehensive overview of how to use the SKU Specification Comparator application, including all interface elements and interaction patterns.</p>
+        </div>
+
+        <h2>Application Interface</h2>
+        <p>The SKU Comparator features a clean, single-page interface optimized for dark mode viewing. The interface is divided into three main sections:</p>
+
+        <h3>1. Header Section</h3>
+        <p>The header displays the application title and a brief description of its purpose:</p>
+        <ul>
+            <li><strong>Title:</strong> "Compare your SKU specifications with confidence"</li>
+            <li><strong>Subtitle:</strong> Explains that you can provide a SKU and attributes to compare against Google Gemini's interpretation</li>
+            <li><strong>Badge:</strong> "Gemini-powered analysis" indicator</li>
+        </ul>
+
+        <h3>2. Specification Input Card</h3>
+        <p>This is the primary input area where you provide your data for comparison.</p>
+
+        <h4>SKU Field</h4>
+        <ul>
+            <li><strong>Purpose:</strong> Enter the unique identifier for the product you want to compare</li>
+            <li><strong>Format:</strong> Any string (e.g., "SKU-90210", "PROD-ABC-123", "iPhone-15-Pro")</li>
+            <li><strong>Required:</strong> Yes - the application will show an error if this field is empty</li>
+            <li><strong>Default:</strong> Pre-filled with "SKU-90210" as an example</li>
+        </ul>
+
+        <h4>Key-Value Pairs Textarea</h4>
+        <ul>
+            <li><strong>Purpose:</strong> Enter the product specifications you want to compare</li>
+            <li><strong>Format:</strong> Accepts both JSON and colon-separated format (see <a href="input-formats.html">Input Formats</a>)</li>
+            <li><strong>Features:</strong> 
+                <ul>
+                    <li>Monospace font for better code readability</li>
+                    <li>Minimum height of 220px for comfortable editing</li>
+                    <li>Scrollable content with custom scrollbar styling</li>
+                </ul>
+            </li>
+            <li><strong>Default:</strong> Pre-filled with a JSON example</li>
+        </ul>
+
+        <h4>Compare Button</h4>
+        <ul>
+            <li><strong>Label:</strong> "Compare SKU"</li>
+            <li><strong>States:</strong>
+                <ul>
+                    <li><strong>Default:</strong> "Compare SKU" - ready to submit</li>
+                    <li><strong>Loading:</strong> "Comparing…" - request in progress</li>
+                    <li><strong>Disabled:</strong> Button is disabled during API calls</li>
+                </ul>
+            </li>
+            <li><strong>Visual feedback:</strong> Hover animation with slight vertical translation</li>
+        </ul>
+
+        <h4>Status Messages</h4>
+        <p>Below the input fields, you'll see contextual messages:</p>
+        <ul>
+            <li><strong>Before comparison:</strong> "Gemini will only receive the keys you provide, thanks to structured output."</li>
+            <li><strong>After comparison:</strong> Summary of matches/mismatches (e.g., "2 mismatches detected across 3 attributes.")</li>
+            <li><strong>Errors:</strong> Red-highlighted error messages if input validation fails or API errors occur</li>
+        </ul>
+
+        <h3>3. Comparison Results Section</h3>
+        <p>After running a comparison, this section displays the results in an interactive table.</p>
+
+        <h2>Using the Input Form</h2>
+
+        <h3>Entering a SKU</h3>
+        <p>The SKU field accepts any string identifier. Best practices:</p>
+        <ul>
+            <li>Use your actual product SKU for best results</li>
+            <li>More specific SKUs yield better AI responses</li>
+            <li>Include brand names or model numbers when relevant</li>
+            <li>Examples: "MacBook-Pro-14-2023", "CHAIR-OFFICE-ERGO", "WIDGET-X500"</li>
+        </ul>
+
+        <h3>Entering Specifications</h3>
+        <p>You can paste specifications in two formats:</p>
+
+        <h4>JSON Format (Recommended)</h4>
+        <div class="code-block">
+            <pre><code>{
+  "Color": "Red",
+  "Material": "Steel",
+  "Weight": "5 lbs"
+}</code></pre>
+        </div>
+        <p><strong>Benefits:</strong> Clean, structured, no ambiguity in parsing</p>
+
+        <h4>Colon-Separated Format</h4>
+        <div class="code-block">
+            <pre><code>Color: Red
+Material: Steel
+Weight: 5 lbs</code></pre>
+        </div>
+        <p><strong>Benefits:</strong> Quick to type, human-readable, no JSON syntax required</p>
+
+        <h3>Submitting the Form</h3>
+        <p>Click the "Compare SKU" button to submit. The application will:</p>
+        <ol>
+            <li>Validate that a SKU is provided</li>
+            <li>Parse your specifications</li>
+            <li>Show error if parsing fails</li>
+            <li>Disable the button and show "Comparing…"</li>
+            <li>Send request to the API</li>
+            <li>Display results when complete</li>
+        </ol>
+
+        <h2>Understanding the Results Table</h2>
+
+        <h3>Table Structure</h3>
+        <p>The comparison table has three columns:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Attribute</strong></td>
+                    <td>The name of the specification field (e.g., "Color", "Material")</td>
+                </tr>
+                <tr>
+                    <td><strong>Your Value</strong></td>
+                    <td>The value you provided in your input</td>
+                </tr>
+                <tr>
+                    <td><strong>LLM Value</strong></td>
+                    <td>The value generated by Google Gemini based on the SKU</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Visual Indicators</h3>
+        <ul>
+            <li><strong>Normal rows:</strong> Default background color (values match)</li>
+            <li><strong>Mismatch rows:</strong> Entire row has a subtle amber tint</li>
+            <li><strong>Mismatch LLM cell:</strong> Amber background with higher opacity for clear identification</li>
+            <li><strong>Hover effect:</strong> Rows highlight on mouse hover for better readability</li>
+        </ul>
+
+        <h3>Empty States</h3>
+        <p>The table shows different messages based on context:</p>
+        <ul>
+            <li><strong>No comparison yet:</strong> "Start a comparison to see Gemini's take on your SKU specifications."</li>
+            <li><strong>Loading:</strong> Animated skeleton loaders (4 placeholder rows)</li>
+            <li><strong>No differences (with filter on):</strong> "No differences to show."</li>
+        </ul>
+
+        <h2>Using the Difference Filter</h2>
+
+        <h3>Toggle Switch</h3>
+        <p>Above the results table, you'll find a toggle switch labeled "Show only differences".</p>
+
+        <h4>When to Use</h4>
+        <ul>
+            <li><strong>Many attributes:</strong> When comparing 10+ specifications</li>
+            <li><strong>Focus on issues:</strong> When you only want to review mismatches</li>
+            <li><strong>Quality checking:</strong> To quickly identify problem areas</li>
+        </ul>
+
+        <h4>Behavior</h4>
+        <ul>
+            <li><strong>Off (default):</strong> Shows all attributes in the comparison table</li>
+            <li><strong>On:</strong> Filters table to show only rows where Your Value ≠ LLM Value</li>
+            <li><strong>Dynamic:</strong> Updates immediately when toggled</li>
+            <li><strong>Preserved:</strong> Setting is preserved when you run a new comparison</li>
+        </ul>
+
+        <h2>Keyboard Navigation</h2>
+        <p>The application supports standard keyboard navigation:</p>
+        <ul>
+            <li><strong>Tab:</strong> Move between input fields and buttons</li>
+            <li><strong>Enter:</strong> Submit the form (when focused on input fields)</li>
+            <li><strong>Space:</strong> Toggle the "Show only differences" switch (when focused)</li>
+            <li><strong>Ctrl/Cmd + A:</strong> Select all text in focused input</li>
+        </ul>
+
+        <h2>Error Handling</h2>
+
+        <h3>Input Validation Errors</h3>
+        <p>The application validates your input before sending to the API:</p>
+        <ul>
+            <li><strong>Empty SKU:</strong> "Please provide a SKU before comparing."</li>
+            <li><strong>Parse error:</strong> "Unable to parse input" or specific line error</li>
+            <li><strong>Invalid JSON:</strong> "Unable to parse line: [problematic line]"</li>
+        </ul>
+
+        <h3>API Errors</h3>
+        <p>If the API request fails, you'll see error messages like:</p>
+        <ul>
+            <li><strong>Network error:</strong> "Something went wrong while contacting Gemini"</li>
+            <li><strong>API error:</strong> Specific error message from the server</li>
+            <li><strong>Missing API key:</strong> "GEMINI_API_KEY is not configured"</li>
+        </ul>
+
+        <div class="warning">
+            <strong>Troubleshooting Tip:</strong> If you see persistent errors, check the <a href="troubleshooting.html">Troubleshooting Guide</a> or verify your <a href="environment.html">Environment Configuration</a>.
+        </div>
+
+        <h2>Mobile Usage</h2>
+        <p>The application is fully responsive and works on mobile devices:</p>
+        <ul>
+            <li><strong>Touch-friendly:</strong> All buttons and inputs are appropriately sized</li>
+            <li><strong>Scrollable table:</strong> Comparison table scrolls horizontally on small screens</li>
+            <li><strong>Stacked layout:</strong> Button and status text stack vertically on mobile</li>
+            <li><strong>Optimized text:</strong> Font sizes adjust for readability</li>
+        </ul>
+
+        <h2>Dark Mode</h2>
+        <p>The application is designed with dark mode as the default and only theme:</p>
+        <ul>
+            <li><strong>Background:</strong> Gradient from slate-950 to slate-900</li>
+            <li><strong>Text:</strong> High contrast for comfortable reading</li>
+            <li><strong>Highlights:</strong> Amber accents for mismatches</li>
+            <li><strong>Cards:</strong> Semi-transparent backgrounds with subtle borders</li>
+        </ul>
+
+        <h2>Performance Considerations</h2>
+
+        <h3>Response Times</h3>
+        <ul>
+            <li><strong>Typical:</strong> 2-5 seconds for a comparison</li>
+            <li><strong>Factors:</strong> Number of attributes, API load, network speed</li>
+            <li><strong>Timeout:</strong> Requests may timeout after 30 seconds</li>
+        </ul>
+
+        <h3>Best Practices</h3>
+        <ul>
+            <li>Keep attribute count reasonable (5-20 for best performance)</li>
+            <li>Wait for one comparison to complete before starting another</li>
+            <li>Use the filter toggle to reduce visual clutter with many attributes</li>
+        </ul>
+
+        <h2>Common Workflows</h2>
+
+        <h3>Quick Validation</h3>
+        <ol>
+            <li>Paste SKU and specifications</li>
+            <li>Click Compare</li>
+            <li>Toggle "Show only differences"</li>
+            <li>Review highlighted mismatches</li>
+        </ol>
+
+        <h3>Detailed Review</h3>
+        <ol>
+            <li>Enter your data</li>
+            <li>Run comparison</li>
+            <li>Review all attributes</li>
+            <li>Toggle filter off/on to compare views</li>
+            <li>Adjust your specifications if needed</li>
+            <li>Re-run comparison to verify changes</li>
+        </ol>
+
+        <h3>Batch Checking</h3>
+        <ol>
+            <li>Prepare multiple SKUs with specifications</li>
+            <li>Compare first SKU</li>
+            <li>Note any patterns in mismatches</li>
+            <li>Clear form and enter next SKU</li>
+            <li>Repeat for all items</li>
+        </ol>
+
+        <div class="next-steps">
+            <h2>Learn More</h2>
+            <div class="button-group">
+                <a href="features.html" class="button-primary">Explore Features</a>
+                <a href="input-formats.html" class="button-secondary">Input Format Details</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

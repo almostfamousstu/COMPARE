@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>Welcome to SKU Specification Comparator</h1>
+        
+        <div class="intro">
+            <p>The SKU Specification Comparator is a modern web application that helps you validate and compare product specifications against AI-generated data from Google Gemini. Built with Next.js 14 and powered by Google's Gemini AI, it provides instant visual feedback on specification discrepancies.</p>
+        </div>
+
+        <h2>What is SKU Comparator?</h2>
+        <p>SKU Comparator is a sleek, dark-mode-first application designed to streamline the process of validating product specifications. Simply provide a SKU identifier and your product attributes, and the application will query Google Gemini to generate corresponding specifications, highlighting any differences between your data and the AI's interpretation.</p>
+
+        <h2>Key Capabilities</h2>
+        <ul class="feature-list">
+            <li><strong>AI-Powered Comparison:</strong> Leverage Google Gemini 2.5 Flash to generate specification data</li>
+            <li><strong>Flexible Input:</strong> Accept data in JSON format or simple colon-separated lines</li>
+            <li><strong>Visual Diff Highlighting:</strong> Instantly identify mismatches with color-coded results</li>
+            <li><strong>Structured Output:</strong> Ensure consistent responses using JSON schema validation</li>
+            <li><strong>Dark Mode Interface:</strong> Modern, eye-friendly design optimized for extended use</li>
+            <li><strong>Responsive Design:</strong> Works seamlessly on desktop, tablet, and mobile devices</li>
+        </ul>
+
+        <h2>Use Cases</h2>
+        <div class="use-case-grid">
+            <div class="use-case-card">
+                <h3>Quality Assurance</h3>
+                <p>Validate product specifications against industry standards and AI knowledge to catch inconsistencies before they reach customers.</p>
+            </div>
+            <div class="use-case-card">
+                <h3>Data Verification</h3>
+                <p>Cross-check your product database entries against AI-generated specifications to identify potential errors or outdated information.</p>
+            </div>
+            <div class="use-case-card">
+                <h3>Catalog Management</h3>
+                <p>Ensure consistency across your product catalog by comparing SKU specifications with AI-generated baseline data.</p>
+            </div>
+            <div class="use-case-card">
+                <h3>Research & Development</h3>
+                <p>Explore how AI interprets product specifications and use insights to improve product descriptions and attributes.</p>
+            </div>
+        </div>
+
+        <h2>How It Works</h2>
+        <ol class="workflow-steps">
+            <li>
+                <strong>Input Your Data</strong>
+                <p>Enter a SKU identifier and paste your product attributes in JSON or colon-separated format.</p>
+            </li>
+            <li>
+                <strong>AI Analysis</strong>
+                <p>The application sends your attribute keys to Google Gemini, which generates corresponding values based on its knowledge of the SKU.</p>
+            </li>
+            <li>
+                <strong>Visual Comparison</strong>
+                <p>Results are displayed in an interactive table with clear highlighting of any differences between your values and the AI's values.</p>
+            </li>
+            <li>
+                <strong>Filter & Review</strong>
+                <p>Toggle to show only differences or review all attributes side-by-side to make informed decisions.</p>
+            </li>
+        </ol>
+
+        <h2>Technology Stack</h2>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <strong>Next.js 14</strong>
+                <p>React framework with App Router for optimal performance</p>
+            </div>
+            <div class="tech-item">
+                <strong>TypeScript</strong>
+                <p>Type-safe development for reliability and maintainability</p>
+            </div>
+            <div class="tech-item">
+                <strong>Tailwind CSS</strong>
+                <p>Utility-first CSS framework for modern styling</p>
+            </div>
+            <div class="tech-item">
+                <strong>shadcn/ui</strong>
+                <p>High-quality, accessible UI components</p>
+            </div>
+            <div class="tech-item">
+                <strong>Google Gemini API</strong>
+                <p>Advanced AI model for specification generation</p>
+            </div>
+            <div class="tech-item">
+                <strong>Docker</strong>
+                <p>Containerization for easy deployment</p>
+            </div>
+        </div>
+
+        <h2>Getting Started</h2>
+        <p>Ready to start comparing specifications? Here's what you need to do:</p>
+        <ol>
+            <li>Follow the <a href="installation.html">Installation Guide</a> to set up the application</li>
+            <li>Configure your <a href="environment.html">Google Gemini API key</a></li>
+            <li>Check out the <a href="quick-start.html">Quick Start</a> guide for your first comparison</li>
+            <li>Explore the <a href="features.html">Features & Tools</a> to learn all capabilities</li>
+        </ol>
+
+        <div class="callout">
+            <h3>📚 Documentation Structure</h3>
+            <p>This documentation is organized into sections to help you find what you need quickly:</p>
+            <ul>
+                <li><strong>Getting Started:</strong> Installation, configuration, and quick start guides</li>
+                <li><strong>User Guide:</strong> How to use the application and understand its features</li>
+                <li><strong>Deployment:</strong> CLI commands, Docker, and environment configuration</li>
+                <li><strong>Technical Reference:</strong> API, architecture, and component documentation</li>
+                <li><strong>Help:</strong> Troubleshooting and frequently asked questions</li>
+            </ul>
+        </div>
+
+        <h2>Requirements</h2>
+        <ul>
+            <li><strong>Node.js:</strong> Version 18.17.0 or newer</li>
+            <li><strong>Google Gemini API Key:</strong> Required for AI-powered comparisons</li>
+            <li><strong>Modern Web Browser:</strong> Chrome, Firefox, Safari, or Edge (latest versions)</li>
+            <li><strong>Internet Connection:</strong> Required for API calls to Google Gemini</li>
+        </ul>
+
+        <div class="next-steps">
+            <h2>Next Steps</h2>
+            <div class="button-group">
+                <a href="installation.html" class="button-primary">Install the Application</a>
+                <a href="quick-start.html" class="button-secondary">Quick Start Guide</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>

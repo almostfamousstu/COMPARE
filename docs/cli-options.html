@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI & Scripts - SKU Comparator Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <article>
+        <h1>CLI & Scripts</h1>
+        
+        <div class="intro">
+            <p>Learn about all available command-line options and npm scripts for developing, building, and running the SKU Comparator application.</p>
+        </div>
+
+        <h2>Available npm Scripts</h2>
+        <p>The application includes several npm scripts defined in <code>package.json</code> for different tasks:</p>
+
+        <h3>Development Script</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>npm run dev</code></pre>
+        </div>
+        
+        <p><strong>Purpose:</strong> Start the Next.js development server</p>
+        
+        <p><strong>What it does:</strong></p>
+        <ul>
+            <li>Starts the application in development mode</li>
+            <li>Enables hot module replacement (HMR)</li>
+            <li>Provides detailed error messages and stack traces</li>
+            <li>Serves the application on <code>http://localhost:3000</code></li>
+            <li>Watches for file changes and auto-reloads</li>
+        </ul>
+
+        <p><strong>When to use:</strong></p>
+        <ul>
+            <li>During active development</li>
+            <li>When making code changes</li>
+            <li>For testing features locally</li>
+            <li>When debugging issues</li>
+        </ul>
+
+        <p><strong>Output example:</strong></p>
+        <div class="code-block">
+            <pre><code>   ▲ Next.js 14.2.3
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.100:3000
+
+ ✓ Ready in 2.3s
+ ○ Compiling / ...
+ ✓ Compiled / in 847ms</code></pre>
+        </div>
+
+        <h3>Build Script</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>npm run build</code></pre>
+        </div>
+        
+        <p><strong>Purpose:</strong> Build the application for production deployment</p>
+        
+        <p><strong>What it does:</strong></p>
+        <ul>
+            <li>Compiles TypeScript to JavaScript</li>
+            <li>Optimizes code and assets for production</li>
+            <li>Generates static pages where possible</li>
+            <li>Creates optimized bundles</li>
+            <li>Minifies CSS and JavaScript</li>
+            <li>Outputs to <code>.next</code> directory</li>
+        </ul>
+
+        <p><strong>When to use:</strong></p>
+        <ul>
+            <li>Before deploying to production</li>
+            <li>To test production build locally</li>
+            <li>As part of CI/CD pipeline</li>
+            <li>Before creating Docker image</li>
+        </ul>
+
+        <p><strong>Output example:</strong></p>
+        <div class="code-block">
+            <pre><code>   ▲ Next.js 14.2.3
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+ ✓ Linting and checking validity of types
+ ✓ Collecting page data
+ ✓ Generating static pages (3/3)
+ ✓ Finalizing page optimization
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    5.2 kB         92.3 kB
+└ ○ /api/compare                         0 B                0 B
++ First Load JS shared by all            87.1 kB
+  ├ chunks/webpack.js                    31.5 kB
+  └ other shared chunks                  55.6 kB</code></pre>
+        </div>
+
+        <h3>Start Script</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>npm run start</code></pre>
+        </div>
+        
+        <p><strong>Purpose:</strong> Start the production server</p>
+        
+        <p><strong>What it does:</strong></p>
+        <ul>
+            <li>Serves the production build</li>
+            <li>Runs on <code>http://localhost:3000</code> by default</li>
+            <li>Optimized for performance</li>
+            <li>No hot reloading or development features</li>
+        </ul>
+
+        <p><strong>When to use:</strong></p>
+        <ul>
+            <li>After running <code>npm run build</code></li>
+            <li>To test production build locally</li>
+            <li>For production deployment (if not using Docker)</li>
+        </ul>
+
+        <div class="warning">
+            <strong>Important:</strong> You must run <code>npm run build</code> before using <code>npm run start</code>. The start command serves the built application from the <code>.next</code> directory.
+        </div>
+
+        <p><strong>Output example:</strong></p>
+        <div class="code-block">
+            <pre><code>   ▲ Next.js 14.2.3
+   - Local:        http://localhost:3000
+
+ ✓ Ready in 345ms</code></pre>
+        </div>
+
+        <h3>Lint Script</h3>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>npm run lint</code></pre>
+        </div>
+        
+        <p><strong>Purpose:</strong> Check code for style and quality issues</p>
+        
+        <p><strong>What it does:</strong></p>
+        <ul>
+            <li>Runs ESLint on the codebase</li>
+            <li>Checks TypeScript files</li>
+            <li>Identifies potential bugs</li>
+            <li>Enforces code style rules</li>
+            <li>Validates Next.js best practices</li>
+        </ul>
+
+        <p><strong>When to use:</strong></p>
+        <ul>
+            <li>Before committing code</li>
+            <li>As part of CI/CD pipeline</li>
+            <li>To check code quality</li>
+            <li>When debugging unexpected behavior</li>
+        </ul>
+
+        <p><strong>Output example (no issues):</strong></p>
+        <div class="code-block">
+            <pre><code>✔ No ESLint warnings or errors</code></pre>
+        </div>
+
+        <p><strong>Output example (with issues):</strong></p>
+        <div class="code-block">
+            <pre><code>./app/page.tsx
+  45:7  Warning: React Hook useMemo has missing dependency  react-hooks/exhaustive-deps
+  
+✖ 1 problem (0 errors, 1 warning)</code></pre>
+        </div>
+
+        <h2>Environment Variables</h2>
+
+        <h3>Required Variables</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>GEMINI_API_KEY</code></td>
+                    <td>Google Gemini API authentication key</td>
+                    <td>"AIza...xyz123"</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Optional Variables</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                    <th>Default</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>PORT</code></td>
+                    <td>Port for the application</td>
+                    <td>3000</td>
+                </tr>
+                <tr>
+                    <td><code>NODE_ENV</code></td>
+                    <td>Environment mode</td>
+                    <td>development</td>
+                </tr>
+                <tr>
+                    <td><code>NEXT_TELEMETRY_DISABLED</code></td>
+                    <td>Disable Next.js telemetry</td>
+                    <td>false</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Setting Environment Variables</h3>
+
+        <h4>For Development</h4>
+        <p>Create a <code>.env.local</code> file in the project root:</p>
+        <div class="code-block">
+            <div class="code-block-header">.env.local</div>
+            <pre><code>GEMINI_API_KEY="your-api-key-here"
+PORT=3000
+NEXT_TELEMETRY_DISABLED=1</code></pre>
+        </div>
+
+        <h4>For Production</h4>
+        <p>Set environment variables through your hosting platform or use a <code>.env.production</code> file.</p>
+
+        <h2>Command-Line Options</h2>
+
+        <h3>Custom Port</h3>
+        <p>Run the development server on a different port:</p>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code># Using PORT environment variable
+PORT=8080 npm run dev
+
+# Or using next dev directly
+npx next dev -p 8080</code></pre>
+        </div>
+
+        <h3>Custom Hostname</h3>
+        <p>Bind to a specific hostname:</p>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>npx next dev -H 0.0.0.0</code></pre>
+        </div>
+
+        <h3>Turbopack (Experimental)</h3>
+        <p>Use the experimental Turbopack bundler for faster builds:</p>
+        <div class="code-block">
+            <div class="code-block-header">Terminal</div>
+            <pre><code>npx next dev --turbo</code></pre>
+        </div>
+
+        <h2>Common Workflows</h2>
+
+        <h3>Initial Setup</h3>
+        <div class="code-block">
+            <pre><code># Install dependencies
+npm install
+
+# Create environment file
+cp .env.local.example .env.local
+
+# Edit .env.local with your API key
+# Then start development server
+npm run dev</code></pre>
+        </div>
+
+        <h3>Development Workflow</h3>
+        <div class="code-block">
+            <pre><code># Start development server
+npm run dev
+
+# In another terminal, run linter
+npm run lint
+
+# Make changes to code
+# Development server auto-reloads
+
+# Before committing
+npm run lint
+npm run build  # Verify build succeeds</code></pre>
+        </div>
+
+        <h3>Production Build and Test</h3>
+        <div class="code-block">
+            <pre><code># Build for production
+npm run build
+
+# Test production build locally
+npm run start
+
+# Access at http://localhost:3000</code></pre>
+        </div>
+
+        <h3>Clean Build</h3>
+        <p>If you encounter build issues, try a clean build:</p>
+        <div class="code-block">
+            <pre><code># Remove build artifacts
+rm -rf .next
+
+# Clear npm cache (if needed)
+npm cache clean --force
+
+# Reinstall dependencies
+rm -rf node_modules package-lock.json
+npm install
+
+# Build again
+npm run build</code></pre>
+        </div>
+
+        <h2>Script Chaining</h2>
+
+        <h3>Build and Start</h3>
+        <div class="code-block">
+            <pre><code>npm run build && npm run start</code></pre>
+        </div>
+
+        <h3>Lint and Build</h3>
+        <div class="code-block">
+            <pre><code>npm run lint && npm run build</code></pre>
+        </div>
+
+        <h2>Troubleshooting</h2>
+
+        <h3>Port Already in Use</h3>
+        <p>If port 3000 is busy:</p>
+        <div class="code-block">
+            <pre><code># Find process using port 3000
+lsof -i :3000
+
+# Kill the process (replace PID)
+kill -9 [PID]
+
+# Or use a different port
+PORT=3001 npm run dev</code></pre>
+        </div>
+
+        <h3>Build Failures</h3>
+        <p>If <code>npm run build</code> fails:</p>
+        <ul>
+            <li>Check TypeScript errors: Look for type issues in output</li>
+            <li>Verify all dependencies installed: <code>npm install</code></li>
+            <li>Check Node.js version: Must be 18.17.0 or newer</li>
+            <li>Clear build cache: <code>rm -rf .next</code></li>
+        </ul>
+
+        <h3>Environment Variable Not Working</h3>
+        <p>If environment variables aren't loading:</p>
+        <ul>
+            <li>Verify <code>.env.local</code> exists in project root</li>
+            <li>Check file name is exactly <code>.env.local</code></li>
+            <li>Restart development server after changing .env file</li>
+            <li>Variables starting with <code>NEXT_PUBLIC_</code> are exposed to browser</li>
+            <li>Other variables are server-side only</li>
+        </ul>
+
+        <h2>CI/CD Integration</h2>
+
+        <h3>GitHub Actions Example</h3>
+        <div class="code-block">
+            <div class="code-block-header">.github/workflows/build.yml</div>
+            <pre><code>name: Build and Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}</code></pre>
+        </div>
+
+        <h3>Docker Build</h3>
+        <p>See the <a href="docker.html">Docker Deployment Guide</a> for containerized builds.</p>
+
+        <div class="callout">
+            <h3>💡 Quick Reference</h3>
+            <ul>
+                <li><code>npm run dev</code> - Development server with hot reload</li>
+                <li><code>npm run build</code> - Production build</li>
+                <li><code>npm run start</code> - Serve production build</li>
+                <li><code>npm run lint</code> - Check code quality</li>
+            </ul>
+        </div>
+
+        <div class="next-steps">
+            <h2>Related Topics</h2>
+            <div class="button-group">
+                <a href="docker.html" class="button-primary">Docker Deployment</a>
+                <a href="environment.html" class="button-secondary">Environment Config</a>
+            </div>
+        </div>
+    </article>
+</body>
+</html>
